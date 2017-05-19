@@ -10,7 +10,7 @@ This Git repo holds code that will run on a users VR desktop compter. It's broke
 
 To run the HumanUnityProject code complete the following steps:
 
-1. Open "HumanV0_3.unity" scene file w/ Unity3D version 5.6, located at the filepath "GitHub\Human\HumanUnityProject\Assets"<br>
+1. Open "HumanV0_3.unity" scene file w/ Unity3D version 5.6, located at the filepath GitHub\Human\HumanUnityProject\Assets<br>
 2. Press the "play" button at the top center of the Unity editor. If it doesn't compile email blaze@spacevr.co<br>
 3. Have fun controlling a VR robot<br>
 
