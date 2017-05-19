@@ -1,0 +1,118 @@
+﻿Enflux SDK Development Kit -- End User License Agreement
+
+
+This Software Development Kit End User License Agreement (the “Agreement”) is a legal agreement between you (either an individual or an entity, “you”) and Enflux Inc. (“Company”) regarding the use of Company's software development kit(s) available for download from Company’s websites or otherwise made available by Company in connection with this Agreement, which may include user documentation provided in "online" or electronic form, object code, interface declarations, assemblies, and sample source code (the “SDK”). You accept this Agreement by filling in the user information and clicking the button marked "agree" or a similar button, where this option is provided by Company, or if you access or use the SDK or any part of the SDK. Before accepting this Agreement or accessing or using the SDK, please carefully read it.
+
+
+Grant of License. 
+Conditioned upon your compliance with the terms and conditions of this Agreement, Company grants to you a limited, revocable, non-exclusive, non-transferable, non-sublicensable, worldwide, royalty-free right and license to: 
+
+
+1. install and use a reasonable number of copies of the SDK on computers owned or controlled by you for the purpose of developing and testing applications that are intended for use solely in connection with Company’s products and services, including without limitation Company’s motion capture clothing (“Application(s)”); 
+2. reproduce and modify any source code included with the SDK and designated as “sample code,” “samples,” “app templates,” and/or “snippets,” and/or found in directories labelled “samples” or “examples (collectively, “Sample Code”) as a component of the Application;
+3. reproduce the relevant and necessary components of the SDK (the “Distributable Code”) solely to incorporate the SDK into the Application; and
+4. distribute the Sample Code and Distributable Code in object form only as a component of the Application, provided that: (a) you shall only distribute such Sample Code and Distributable Code subject to an agreement that protects Company and its affiliates and licensors interests consistent with the terms contained in this Agreement; and (b) you are solely responsible to your customers and end users for any update or support obligations or other liability which may arise from such distribution.
+
+
+Restrictions.  
+Except as expressly provided for herein, you may not, and may not enable others to: 
+1. create, design or develop anything other than the Application;
+2. modify, create derivative works of, reverse engineer, reverse compile, disassemble or otherwise attempt to reconstruct, identify or discover any source code, underlying ideas, techniques, or algorithms in the SDK or the Company’s current or future products and services (collectively, the “Company Products”) (except as and only to the extent any foregoing restriction is prohibited by applicable law or permitted by applicable law notwithstanding the foregoing restriction, or to the extent as may be permitted by licensing terms governing use of any open source software components included within the SDK);  
+3. distribute, sell, lease, rent, lend, offer on a service bureau basis or sublicense any part of the SDK to any third party except as expressly provided herein and as necessary to distribute the Application; 
+4. remove, obscure, or alter any proprietary rights or confidentiality notices within the SDK or any software, documentation or other materials in it or supplied with it; 
+5. create an Application or other software that prevent or degrade the interaction of applications developed by others with the SDK or the Company Products; or
+6. use the SDK to create, develop or use any program or software which: (a) contains any viruses, Trojan horses, worms, time bombs, cancelbots or other computer programming routines that are intended to damage, detrimentally interfere with, surreptitiously intercept or expropriate any system, data or personal information; (b) limit the functionality of any software or hardware; or (c) when used in the manner in which it is intended, violates any material law, statute, ordinance or regulation (including without limitation the laws and regulations governing export control, unfair competition, antidiscrimination or false advertising). 
+
+
+You may use the SDK solely in connection with Company’s current and future products and services and may not use the SDK with the products and services of any direct competitor of Company.
+
+
+Maintenance.  
+You will not receive any support or subscription services for the SDK or any services from Company in connection with the SDK, except as expressly provided in this Agreement or as provided for in a separate agreement between you and Company.
+
+
+Company Use of Your Assets. 
+Subject to the terms and conditions of this Agreement, you grant to Company and its affiliates a non-exclusive, worldwide and royalty-free license to use, reproduce, display, perform, publish and distribute screenshots, elements, assets, photographic, graphic or video reproductions or fragments of your Application in any medium or media, solely for purposes of promotion of your Application or of Company and its technology and business. To the extent that you provide Company with input or usage requests with regard to the use of your logo or materials, Company will use commercially reasonable efforts to comply with such requests. This license will terminate if we terminate this Agreement, or, if you terminate this Agreement, except that in both cases the license will continue after termination with respect to any materials we created and first distributed prior to our termination or your notice of termination to Company.
+
+
+Trademarks; Publicity.
+
+
+You may indicate that your Application is “for Enflux” or “Enflux-enabled”. However, unless provided in an agreement between you and Company, you may not otherwise use “Enflux”, “EnfluxVR”, or any other trademark of Company in connection with your Application or company, or in any URL, product, service, name field or logos created by you. You will include a reference to the Company Products and Company in any press releases for the Application that relate to Company and its Company Products, and will identify Company as the provider of the Company. You may not use Company’s trademarks, whether registered or unregistered, in any manner that implies that Company endorses or otherwise approves of the Application. Your use of the Company name under this Agreement does not create any right, title or interest in the Company name or any Company trademarks and all goodwill arising from your use inures solely to the benefit of Company.
+
+
+
+
+Proprietary Rights.  
+Company and its licensors own, and shall retain ownership of, all right, title, and interest to the SDK and the Company Products, including, without limitation, all copyrights and other intellectual property rights therein. Without limiting the foregoing, the SDK is protected by United States copyright laws, international treaty provisions and other applicable laws. There are no implied licenses or other implied rights granted under this Agreement. All rights not expressly granted hereunder are reserved to Company. You may (but are not required to) provide feedback, comments and suggestions (collectively, “Feedback”) to Company. You acknowledge that the SDK and the Company Products contain valuable proprietary information and trade secrets and that unauthorized or improper use of the SDK and the Company Products will result in irreparable harm to Company and its licensors for which monetary damages would be inadequate and for which Company and its licensors will be entitled to immediate injunctive relief. You hereby grant to Company a non-exclusive, perpetual, irrevocable, paid-up, transferable, sub-licensable, worldwide license under all intellectual property rights covering such Feedback to use, disclose and exploit all such Feedback for any purpose. 
+
+
+You and your licensors own, and shall retain ownership of, all right, title, and interest to the Application, including, without limitation, all copyrights and other intellectual property rights therein.
+
+
+Nothing in this Agreement will preclude Company or its affiliates from lawfully developing, independently of your Confidential Information, for itself or for others, products or services that are competitive with the Application.
+
+
+Open Source Software.  
+The SDK may include software or other materials that are provided under a separate license agreement, and that separate license will govern the use of such software or other materials in the event of a conflict with this Agreement. Any such separate license agreement may be indicated in the license, notice, or readme files distributed with the applicable software or other materials or in related documentation.
+
+
+No High Risk Use; Acknowledgment and Waiver.
+Notwithstanding anything in this Agreement, you are not licensed to, and you agree not to, use, copy, sell, offer for sale, or distribute the SDK (whether compiled with, incorporated into, or packaged with your Application or otherwise) for or in connection with uses where failure or fault of the SDK or your Application could lead to death or serious bodily injury of any person, or to severe physical or environmental damage (“High Risk Use”). ANY SUCH USE IS STRICTLY PROHIBITED.
+
+
+You acknowledge the SDK may allow you to develop Application that could involve potential risks of personal injury or death, property damage, or other losses. If you elect to use the SDK in such a way, you must take steps to design and test your Application to ensure that your Application do not present risks of personal injury or death, property damage, or other losses. The SDK or any part thereof may not always function as intended. You must design your Application so that any failure of the SDK or any component thereof does not cause personal injury or death, property damage, or other losses. If you choose to use the SDK: (1) you assume all risk that use of the SDK by you or by any others causes any harm or loss, including to the end users of your Application or to third parties; (2) you hereby waive, on behalf of yourself and your end users, all claims against Company and its affiliates related to such use, harm or loss (including, but not limited to, any claim that the SDK is defective); and (3) you agree to hold Company and its affiliates harmless from such claims.
+
+
+Your Obligations and Warranties. 
+In addition to your other obligations under this Agreement, you warrant and agree that:
+1. You are at least 18 years of age and have the right and authority to enter into this Agreement on your own behalf, or if you are entering into this Agreement on behalf of your company or organization, you have the right and authority to legally bind your company or organization.
+2. You will use the SDK only in accordance with all accompanying documentation, in the manner expressly permitted by this Agreement, and your use of the SDK, and the marketing, sales and distribution of your Application, will be in compliance with all applicable laws and regulations and all U.S. and local or foreign export and re-export restrictions applicable to the technology and documentation provided under this Agreement (including privacy and data security laws and regulations), and you will not develop any Application which would commit or facilitate the commission of a crime, or other tortious, unlawful, or illegal act.
+
+
+Confidentiality.
+You agree to maintain the confidentiality of any proprietary information received by you during, or prior to entering into, this Agreement, including, without limitation, the SDK, that you should know is confidential or proprietary based on the circumstances surrounding the disclosure, including, without limitation, non-public technical and business information (“Confidential Information”) for a period of five years after the termination of this Agreement. This section shall not apply to any publicly available or independently developed information. You agree not to use said Confidential Information for any purpose except as necessary to fulfill your obligations and exercise your rights under this Agreement. You shall protect the secrecy of and avoid disclosure and unauthorized use of the Company's Confidential Information to the same degree that you take to protect your own confidential information and in no event less than reasonable care.
+
+
+Notwithstanding any other provisions of this Agreement, Company will be free to use for any purpose (including but not limited to use in the development, manufacture, marketing and maintenance of the Company Products) the Residuals (as defined below) resulting from access to or work with your Confidential Information; provided that Company maintains the confidentiality of the Confidential Information as provided herein. The term “Residual” shall mean information in non-tangible form that is retained in the unaided memory by persons who have had rightful access to the Confidential Information, including without limitation, the ideas, concepts, know-how or techniques contained therein. Company will have no obligation to limit or restrict the work assignments of any of its employees, consultants, and contractors who are provided access to the Confidential Information.
+
+
+
+
+Indemnification.
+You agree to defend, indemnify and hold harmless Company, and any of its directors, officers, employees, affiliates or agents, from and against any and all claims, losses, damages, liabilities and other expenses (including attorneys' fees), arising from your use, modification and distribution of the SDK or breach of this Agreement.
+
+
+Term and Termination.
+This Agreement shall continue as long as you are in compliance with the terms specified herein or until otherwise terminated. You and or Company may terminate this Agreement for any reason at any time. You agree, upon termination, to destroy all copies of the SDK within your possession or control. The Confidentiality, Indemnification, No Warranties, Limitation of Liability, and General sections set out in this Agreement shall survive any termination of this Agreement.
+
+
+NO WARRANTIES.
+
+
+THE SDK IS PROVIDED “AS IS” AND COMPANY AND ITS AFFILIATES AND LICENSORS MAKE, AND YOU RECEIVE, NO OTHER WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR IN ANY COMMUNICATION WITH YOU. COMPANY SPECIFICALLY DISCLAIMS ANY OTHER WARRANTY INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR A PARTICULAR PURPOSE.  COMPANY DOES NOT WARRANT THAT THE OPERATION OF THE SDK WILL BE UNINTERRUPTED OR ERROR FREE OR THAT DEFECTS IN THE SDK WILL BE CORRECTED.  COMPANY MAKES NO WARRANTY WITH RESPECT TO THE CORRECTNESS, ACCURACY, OR RELIABILITY OF THE SDK AND DOCUMENTATION.  Some jurisdictions do not allow the exclusion of implied warranties, so the above exclusion may not apply to you.
+
+
+LIMITATION OF LIABILITY.
+
+
+THE TOTAL LIABILITY OF COMPANY AND ITS AFFILIATES AND LICENSORS UNDER THIS AGREEMENT FOR DAMAGES WILL NOT EXCEED $50 IN THE AGGREGATE.  IN NO EVENT WILL COMPANY OR ITS AFFILIATES AND LICENSORS BE LIABLE IN ANY WAY FOR INCIDENTAL, CONSEQUENTIAL, INDIRECT, SPECIAL OR PUNITIVE DAMAGES OF ANY NATURE, INCLUDING WITHOUT LIMITATION, LOST BUSINESS PROFITS, OR LIABILITY OR INJURY TO THIRD PERSONS, WHETHER FORESEEABLE OR NOT, REGARDLESS OF WHETHER COMPANY OR ITS AFFILIATES AND LICENSORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.   Some jurisdictions do not permit limitations of liability for incidental or consequential damages, so the above exclusions may not apply to you.
+
+
+U.S. Government-Restricted Rights.
+The SDK and accompanying documentation are deemed to be "commercial computer software" and "commercial computer SDK documentation," respectively, pursuant to DFAR Section 227.7202 and FAR Section 12.212, as applicable. Any use, modification, reproduction release, performance, display or disclosure of the SDK and accompanying documentation by the U.S. Government will be governed solely by the terms of this Agreement and shall be prohibited except to the extent expressly permitted by the terms of this Agreement.
+
+
+Export Restrictions.
+You may not download, export, or re-export the SDK: (1) into, or to a national or resident of, Cuba, Iraq, Libya, Yugoslavia, North Korea, Iran, Syria or any other country to which the United States has embargoed goods, or (2) to anyone on the United States Treasury Department's list of Specially Designated Nationals or the U.S. Commerce Department's Table of Deny Orders. By downloading or using the SDK, you are representing and warranting that you are not located in, under the control of, or a national or resident of any such country or on any such list.
+
+
+General.
+This Agreement is governed by the laws of the United States and the State of California, without reference to conflict of laws principles. Any dispute between you and Company regarding this Agreement will be subject to the exclusive venue of the state and federal courts in Santa Clara County, California. This Agreement is the entire agreement between you and Company and supersedes any other communications or advertising with respect to the SDK and documentation. If any provision of this Agreement is held invalid, the remainder of this Agreement shall continue in full force and effect. The failure of either party to enforce any provision of this Agreement may not be deemed a waiver of that or any other provision of this Agreement.
+
+
+Correspondence and Notice. 
+Should you have any questions concerning this Agreement, or if you desire to contact Company for any reason, please direct all correspondence to hello@getenflux.com. The address for notice to Company under this Agreement is:
+
+
+29249 Albatross Road, Hayward, CA 94545
