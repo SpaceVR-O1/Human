@@ -19,3 +19,5 @@ To run the HumanUnrealEngineProject code complete the following steps:
 1. TBD <br>
 
 ***FutureWork: Long term features we hope to implement.
+
+http://up1.github.io/git-guide/index.html 
