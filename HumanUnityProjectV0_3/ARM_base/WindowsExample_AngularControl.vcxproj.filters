@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Lib_Examples">
+      <UniqueIdentifier>{e9187bb0-4340-4658-b60b-249af39e3cae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -23,6 +26,15 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib_Examples\CommandLayer.h">
+      <Filter>Source Files\Lib_Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib_Examples\CommunicationLayerWindows.h">
+      <Filter>Source Files\Lib_Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib_Examples\KinovaTypes.h">
+      <Filter>Source Files\Lib_Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\WindowsExample_CartesianControl\WindowsExample_CartesianControl.vcxproj" />
+    <None Include="Lib_Examples\CommandLayerWindows.dll">
+      <Filter>Source Files\Lib_Examples</Filter>
+    </None>
+    <None Include="Lib_Examples\CommunicationLayerWindows.dll">
+      <Filter>Source Files\Lib_Examples</Filter>
+    </None>
   </ItemGroup>
 </Project>
