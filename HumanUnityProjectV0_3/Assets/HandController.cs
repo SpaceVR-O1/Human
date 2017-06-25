@@ -29,13 +29,13 @@ using System.Runtime.InteropServices;
 
 public class HandController : MonoBehaviour
 {
-  [DllImport("ARM_base.dll")]
+  [DllImport("ARM_base", EntryPoint = "TestFunction")]
   public static extern int TestFunction();
-  [DllImport("ARM_base.dll")]
+  [DllImport("ARM_base", EntryPoint = "InitRobot")]
   public static extern int InitRobot();
-  [DllImport("ARM_base.dll")]
+  [DllImport("ARM_base", EntryPoint = "MoveHand")]
   public static extern int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
-  [DllImport("ARM_base.dll")]
+  [DllImport("ARM_base", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice();
 
   private bool handOpen = true;    //If true hand is in closed fist

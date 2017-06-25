@@ -1,4 +1,5 @@
 
+#include "ARM_base.h"
 #include <Windows.h>
 #include "Lib_Examples\CommunicationLayerWindows.h"
 #include "Lib_Examples\CommandLayer.h"
@@ -25,7 +26,7 @@ int(*MyGetAngularCommand)(AngularPosition &);
 extern "C"
 {
 	// test function just to figure out if we can access dll & it works
-	__declspec(dllexport) int TestFunction()
+	int TestFunction()
 	{
 		return 22;
 	}
@@ -36,7 +37,7 @@ extern "C"
 	// -1 - not able to load KINOVA APIs
 	// -2 - no device found
 	// -3 - more devices found
-	__declspec(dllexport) int InitRobot()
+	int InitRobot()
 	{
 		//We load the API.
 		commandLayer_handle = LoadLibrary(L"CommandLayerWindows.dll");
@@ -82,7 +83,7 @@ extern "C"
 	}
 
 	// send robot to new point
-	__declspec(dllexport) int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
 	{
 		TrajectoryPoint pointToSend;
 		pointToSend.InitStruct();
@@ -100,7 +101,7 @@ extern "C"
 	}
 
 	// Close device & free the library
-	__declspec(dllexport) int CloseDevice()
+	int CloseDevice()
 	{
 		(*MyCloseAPI)();
 		FreeLibrary(commandLayer_handle);
