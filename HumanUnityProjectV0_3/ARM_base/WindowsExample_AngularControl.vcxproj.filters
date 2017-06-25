@@ -36,13 +36,16 @@
     <ClInclude Include="Lib_Examples\KinovaTypes.h">
       <Filter>Source Files\Lib_Examples</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\human-andres\Human\HumanUnityProjectV0_3\ARM_base\ARM_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ARM_base.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\..\human-andres\Human\HumanUnityProjectV0_3\ARM_base\ARM_base.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
