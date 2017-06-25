@@ -118,6 +118,30 @@ public class HandController : MonoBehaviour
 	case -3:
 	  Debug.LogWarning("Robot - more devices found - not sure which to use");
 	  break;
+	case -10:
+	  Debug.LogWarning("Robot APIs troubles: InitAPI");
+	  break;
+	case -11:
+	  Debug.LogWarning("Robot APIs troubles: CloseAPI");
+	  break;
+	case -12:
+	  Debug.LogWarning("Robot APIs troubles: SendBasicTrajectory");
+	  break;
+	case -13:
+	  Debug.LogWarning("Robot APIs troubles: GetDevices");
+	  break;
+	case -14:
+	  Debug.LogWarning("Robot APIs troubles: SetActiveDevice");
+	  break;
+	case -15:
+	  Debug.LogWarning("Robot APIs troubles: GetAngularCommand");
+	  break;
+	case -16:
+	  Debug.LogWarning("Robot APIs troubles: MoveHome");
+	  break;
+	case -17:
+	  Debug.LogWarning("Robot APIs troubles: InitFingers");
+	  break;
 	default:
 	  Debug.LogWarning("Robot - unknown error from initialization");
 	  break;
