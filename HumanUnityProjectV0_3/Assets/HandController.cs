@@ -61,6 +61,7 @@ public class HandController : MonoBehaviour
   [DllImport("ARM_base_64", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice();
 
+  private bool initSuccessful = false;
   private bool handOpen = true;       //If false hand is in closed fist
   private bool armsActive = false;    //If false users arm movements don't cause the robot to move.
   static public int TEST_PASSED = 22; //Constant used inside the Kinova ARM_base.cpp file
@@ -105,7 +106,8 @@ public class HandController : MonoBehaviour
 	int errorCode = InitRobot();
 	switch (errorCode) {
 	case 0:
-	  Debug.Log("Kinova robotic arm loaded and device found");
+	  Debug.Log ("Kinova robotic arm loaded and device found");
+	  initSuccessful = true;
 	  break;
 	case -1:
 	  Debug.LogWarning("Robot APIs troubles");
@@ -134,11 +136,13 @@ public class HandController : MonoBehaviour
 	Vector3 controllerPosition = GetGlobalPosition();
 	Vector3 controllerRotation = GetLocalRotation();
 	try{
-	  float temp = 1.0f;
+	  float temp = 0.0f;
 
-	  //MoveArm();
-	  //MoveArm(temp, temp, temp, temp, temp, temp);
-	  MoveHand(controllerPosition.x, controllerPosition.y, controllerPosition.z, controllerRotation.x, controllerRotation.y, controllerRotation.z);
+	  if (initSuccessful) {
+		//MoveArm();
+		MoveHand(temp, temp, temp, temp, temp, temp);
+		//	  MoveHand(controllerPosition.x, controllerPosition.y, controllerPosition.z, controllerRotation.x, controllerRotation.y, controllerRotation.z);
+	  }
 	}
 	catch(EntryPointNotFoundException e){
 	  Debug.Log(e.Data);
