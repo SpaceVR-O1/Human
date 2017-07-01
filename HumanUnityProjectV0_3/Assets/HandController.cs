@@ -48,17 +48,17 @@ public class HandController : MonoBehaviour
   static public string THUMB_EXTENDED  = "00010000";
 
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
-  [DllImport("ARM_base_64", EntryPoint = "TestFunction")]
+  [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
   public static extern int TestFunction();
-  [DllImport("ARM_base_64", EntryPoint = "InitRobot")]
+  [DllImport("ARM_base_32", EntryPoint = "InitRobot")]
   public static extern int InitRobot();
-  [DllImport("ARM_base_64", EntryPoint = "MoveHand")]
+  [DllImport("ARM_base_32", EntryPoint = "MoveHand")]
   public static extern int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   //public static extern int MoveArm();
   //public static extern int MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   //[DllImport("ARM_base.dll", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
   //public static extern int MoveHand(Int16 gloveState);
-  [DllImport("ARM_base_64", EntryPoint = "CloseDevice")]
+  [DllImport("ARM_base_32", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice();
 
   private bool initSuccessful = false;
