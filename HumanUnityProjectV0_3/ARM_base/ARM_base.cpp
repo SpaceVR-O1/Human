@@ -1,4 +1,5 @@
 
+#include "ARM_base.h"
 #include <Windows.h>
 #include "Lib_Examples\CommunicationLayerWindows.h"
 #include "Lib_Examples\CommandLayer.h"
@@ -25,7 +26,7 @@ int(*MyGetAngularCommand)(AngularPosition &);
 extern "C"
 {
 	// test function just to figure out if we can access dll & it works
-	__declspec(dllexport) int TestFunction()
+	int TestFunction()
 	{
 		return 22;
 	}
@@ -36,10 +37,15 @@ extern "C"
 	// -1 - not able to load KINOVA APIs
 	// -2 - no device found
 	// -3 - more devices found
-	__declspec(dllexport) int InitRobot()
+	int InitRobot()
 	{
 		//We load the API.
 		commandLayer_handle = LoadLibrary(L"CommandLayerWindows.dll");
+
+		if (commandLayer_handle == NULL)
+		{
+			return -123;
+		}
 
 		int programResult = 0;
 
@@ -54,14 +60,39 @@ extern "C"
 		MyInitFingers = (int(*)()) GetProcAddress(commandLayer_handle, "InitFingers");
 
 		//Verify that all functions has been loaded correctly
-		if ((MyInitAPI == NULL) || (MyCloseAPI == NULL) || (MySendBasicTrajectory == NULL) ||
-			(MyGetDevices == NULL) || (MySetActiveDevice == NULL) || (MyGetAngularCommand == NULL) ||
-			(MyMoveHome == NULL) || (MyInitFingers == NULL))
-
+		if (MyInitAPI == NULL)
 		{
-			// not succesfull - API troubles
-			return -1;
+			return -10;
 		}
+		else if (MyCloseAPI == NULL)
+		{
+			return -11;
+		}
+		else if (MySendBasicTrajectory == NULL)
+		{
+			return -12;
+		}
+		else if (MyGetDevices == NULL)
+		{
+			return -13;
+		}
+		else if (MySetActiveDevice == NULL)
+		{
+			return -14;
+		}
+		else if (MyGetAngularCommand == NULL)
+		{
+			return -15;
+		}
+		else if (MyMoveHome == NULL)
+		{
+			return -16;
+		}
+		else if (MyInitFingers == NULL)
+		{
+			return -17;
+		}
+
 		int result = (*MyInitAPI)();
 		KinovaDevice list[MAX_KINOVA_DEVICE];
 
@@ -82,7 +113,7 @@ extern "C"
 	}
 
 	// send robot to new point
-	__declspec(dllexport) int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
 	{
 		TrajectoryPoint pointToSend;
 		pointToSend.InitStruct();
@@ -100,7 +131,7 @@ extern "C"
 	}
 
 	// Close device & free the library
-	__declspec(dllexport) int CloseDevice()
+	int CloseDevice()
 	{
 		(*MyCloseAPI)();
 		FreeLibrary(commandLayer_handle);
