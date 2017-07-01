@@ -1,6 +1,0 @@
-﻿  stdafx.cpp
-  ARM_base.cpp
-stdafx.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-     Creating library C:\Users\SpaceVR\Documents\GitHub\human2\HumanUnityProjectV0_3\ARM_base\x64\Debug\ARM_base.lib and object C:\Users\SpaceVR\Documents\GitHub\human2\HumanUnityProjectV0_3\ARM_base\x64\Debug\ARM_base.exp
-MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
-C:\Users\SpaceVR\Documents\GitHub\human2\HumanUnityProjectV0_3\ARM_base\x64\Debug\ARM_base.exe : fatal error LNK1120: 1 unresolved externals
