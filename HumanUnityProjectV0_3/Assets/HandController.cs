@@ -97,10 +97,10 @@ public class HandController : MonoBehaviour
 
 	Debug.Log("START");
 	if (TestFunction() == TEST_PASSED) {
-	  Debug.Log("Kinova robotic arm DLL is working");
+	  Debug.Log("Kinova robotic arm DLL import is working");
 	}
 	else {
-	  Debug.Log("Kinova robotic arm DLL is not working");
+	  Debug.Log("Kinova robotic arm DLL import is not working");
 	}
 
 	int errorCode = InitRobot();
@@ -141,6 +141,9 @@ public class HandController : MonoBehaviour
 	  break;
 	case -17:
 	  Debug.LogWarning("Robot APIs troubles: InitFingers");
+	  break;
+	case -123:
+	  Debug.LogWarning ("Robot APIs troubles: Command Layer Handle");
 	  break;
 	default:
 	  Debug.LogWarning("Robot - unknown error from initialization");
