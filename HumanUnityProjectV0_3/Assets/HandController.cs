@@ -178,6 +178,10 @@ public class HandController : MonoBehaviour
 	  DoMoveArm(x, y, z, thetaX, thetaY, thetaZ);
 	}
 
+	if (controller.GetPressDown (gripButton)) {
+	  DoMoveArm(.2f, -.4f, .5f, 1.5f, .8f, .04f);
+	}
+
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
 	  Debug.Log("Controller #" + (int)trackedHandObj.index + " POSITION is:");
 	  Debug.Log("Global X = " + controllerPosition.x + " Local X =  " + this.transform.localPosition.x);
