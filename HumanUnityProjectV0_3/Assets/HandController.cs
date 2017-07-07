@@ -249,6 +249,7 @@ public class HandController : MonoBehaviour
    */
   private void OnApplicationQuit() {
 	//Clean up memory and and UI timers used  (e.g. armTimer.Close();)
+	CloseDevice();
   }
 
   /**@brief OnTriggerEnter() is called on collider trigger events.
