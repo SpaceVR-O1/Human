@@ -47,6 +47,8 @@ public class HandController : MonoBehaviour
   static public string INDEX_EXTENDED  = "00001000";
   static public string THUMB_EXTENDED  = "00010000";
 
+  public float NormalizationFactor = 1.0f;
+
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
   [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
   public static extern int TestFunction();
@@ -162,20 +164,18 @@ public class HandController : MonoBehaviour
 
 	Vector3 controllerPosition = GetGlobalPosition();
 	Vector3 controllerRotation = GetLocalRotation();
-	try{
-	  float temp = 0.0f;
+	float temp = 5.0f;
 
-	  if (initSuccessful) {
-		//MoveArm();
-		MoveHand(temp, temp, temp, temp, temp, temp);
-		//	  MoveHand(controllerPosition.x, controllerPosition.y, controllerPosition.z, controllerRotation.x, controllerRotation.y, controllerRotation.z);
-	  }
-	}
-	catch(EntryPointNotFoundException e){
-	  Debug.Log(e.Data);
-	  Debug.Log(e.GetType());
-	  Debug.Log(e.GetBaseException());
+	//DoMoveArm(temp, temp, temp, temp, temp, temp);
 
+	if (controller.GetPress(triggerButton)) {
+	  float x = NormalizeValue (controllerPosition.x);
+	  float y = NormalizeValue (controllerPosition.y);
+	  float z = NormalizeValue (controllerPosition.z);
+	  float thetaX = NormalizeValue (controllerRotation.x);
+	  float thetaY = NormalizeValue (controllerRotation.y);
+	  float thetaZ = NormalizeValue (controllerRotation.z);
+	  DoMoveArm(x, y, z, thetaX, thetaY, thetaZ);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -236,6 +236,26 @@ public class HandController : MonoBehaviour
 
 
   }//END UPDATE() FUNCTION
+
+  void DoMoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+  {
+	try {
+	  if (initSuccessful) {
+		Debug.Log("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ + ")");
+		MoveHand(x, y, z, thetaX, thetaY, thetaZ);
+	  }
+	} catch(EntryPointNotFoundException e) {
+	  Debug.Log(e.Data);
+	  Debug.Log(e.GetType());
+	  Debug.Log(e.GetBaseException());
+
+	}
+  }
+
+  float NormalizeValue(float value)
+  {
+	return value * NormalizationFactor;
+  }
 
   /**@brief OnApplicationQuit() is called when application closes.
    * 
