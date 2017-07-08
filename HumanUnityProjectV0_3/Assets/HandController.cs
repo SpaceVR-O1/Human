@@ -55,28 +55,55 @@ public class HandController : MonoBehaviour
   public float ArmTargetThetaY = 0.0f;
   public float ArmTargetThetaZ = 0.0f;
 
-  // Arm hanging to the side
-  class RestingPostion
+  class Position
   {
-	public const float x = 0.0f;
-	public const float y = 4.0f;
-	public const float z = 0.0f;
-	public const float thetaX = 0.0f;
-	public const float thetaY = 0.0f;
-	public const float thetaZ = 0.0f;
+  	public float X { get; }
+	public float Y { get; }
+	public float Z { get; }
+	public float ThetaX { get; }
+	public float ThetaY { get; }
+	public float ThetaZ { get; }
+
+	public Position(float x, float y, float z, float thetaX, float thetaY, float thetaZ) {
+  		X = x;
+  		Y = y;
+  		Z = z;
+  		ThetaX = thetaX;
+		ThetaY = thetaY;
+		ThetaZ = thetaZ;
+  	}
+  }
+
+  class NormalizedPosition : Position
+  {
+	private NormalizedPosition(float x, float y, float z, float thetaX, float thetaY, float thetaZ) : base(
+			x, y, z, thetaX, thetaY, thetaZ)
+	{ }
+
+	public static NormalizedPosition FactoryMethod(float normalizationFactor, float x, float y, float z, float thetaX,
+			float thetaY, float thetaZ) {
+		return new NormalizedPosition(
+				NormalizeValue(x, normalizationFactor),
+				NormalizeValue(y, normalizationFactor),
+				NormalizeValue(z, normalizationFactor),
+				NormalizeValue(thetaX, normalizationFactor),
+				NormalizeValue(thetaY, normalizationFactor),
+				NormalizeValue(thetaZ, normalizationFactor));
+	}
+
+	private static float NormalizeValue(float value, float normalizationFactor)
+  	{
+		return value * normalizationFactor;
+  	}
   }
 
   // Arm hanging to the side
-  class RaiseTheRoof
-  {
-	public const float x = 0.0f;
-	public const float y = -5.0f;
-	public const float z = 0.0f;
-	public const float thetaX = 0.0f;
-	public const float thetaY = 0.0f;
-	public const float thetaZ = 0.0f;
-  }
+  Position RestingPosition = new Position(0f, 4f, 0f, 0f, 0f, 0f);
 
+  // Arm hanging to the side
+  Position RaiseTheRoof = new Position(0f, -5f, 0f, 0f, 0f, 0f);
+
+  // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
   [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
   public static extern int TestFunction();
@@ -195,31 +222,26 @@ public class HandController : MonoBehaviour
 	Vector3 controllerRotation = GetLocalRotation();
 	float temp = 5.0f;
 
-	//DoMoveArm(temp, temp, temp, temp, temp, temp);
+	//MoveArm (temp, temp, temp, temp, temp, temp);
 
 	if (controller.GetPress(triggerButton)) {
-	  float x = NormalizeValue (controllerPosition.x);
-	  float y = NormalizeValue (controllerPosition.y);
-	  float z = NormalizeValue (controllerPosition.z);
-	  float thetaX = NormalizeValue (controllerRotation.x);
-	  float thetaY = NormalizeValue (controllerRotation.y);
-	  float thetaZ = NormalizeValue (controllerRotation.z);
-//	  DoMoveArm(x, y, z, thetaX, thetaY, thetaZ);
-	  DoMoveArm(ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetY, ArmTargetZ);
+//	  MoveArm (NormalizedPosition.FactoryMethod(NormalizationFactor, controllerPosition.x, controllerPosition.y,
+//	  		controllerPosition.z, controllerRotation.x, controllerRotation.y, controllerRotation.z));
+	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 	}
 
 	if (controller.GetPress(touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
-		DoMoveArm (RaiseTheRoof.x, RaiseTheRoof.y, RaiseTheRoof.z, RaiseTheRoof.thetaX, RaiseTheRoof.thetaY, RaiseTheRoof.thetaZ);
+		MoveArm (RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		DoMoveArm (RestingPostion.x, RestingPostion.y, RestingPostion.z, RestingPostion.thetaX, RestingPostion.thetaY, RestingPostion.thetaZ);
+		MoveArm (RestingPosition);
 	  }
 	}
 
 	if (controller.GetPressDown (gripButton)) {
-	  DoMoveArm(.2f, -.4f, .5f, 1.5f, .8f, .04f);
+	  MoveArm (.2f, -.4f, .5f, 1.5f, .8f, .04f);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -281,11 +303,12 @@ public class HandController : MonoBehaviour
 
   }//END UPDATE() FUNCTION
 
-  void DoMoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+  void MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
 	  if (initSuccessful) {
-		Debug.Log("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ + ")");
+		Debug.Log("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+				+ ")");
 		MoveHand(x, y, z, thetaX, thetaY, thetaZ);
 	  }
 	} catch(EntryPointNotFoundException e) {
@@ -296,9 +319,9 @@ public class HandController : MonoBehaviour
 	}
   }
 
-  float NormalizeValue(float value)
+  void MoveArm(Position position)
   {
-	return value * NormalizationFactor;
+	MoveArm(position.X, position.Y, position.Z, position.ThetaX, position.ThetaY, position.ThetaZ);
   }
 
   /**@brief OnApplicationQuit() is called when application closes.
