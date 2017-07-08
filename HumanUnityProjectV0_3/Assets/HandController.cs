@@ -48,6 +48,34 @@ public class HandController : MonoBehaviour
   static public string THUMB_EXTENDED  = "00010000";
 
   public float NormalizationFactor = 1.0f;
+  public float ArmTargetX = 0.0f;
+  public float ArmTargetY = 0.0f;
+  public float ArmTargetZ = 0.0f;
+  public float ArmTargetThetaX = 0.0f;
+  public float ArmTargetThetaY = 0.0f;
+  public float ArmTargetThetaZ = 0.0f;
+
+  // Arm hanging to the side
+  class RestingPostion
+  {
+	public const float x = 0.0f;
+	public const float y = 4.0f;
+	public const float z = 0.0f;
+	public const float thetaX = 0.0f;
+	public const float thetaY = 0.0f;
+	public const float thetaZ = 0.0f;
+  }
+
+  // Arm hanging to the side
+  class RaiseTheRoof
+  {
+	public const float x = 0.0f;
+	public const float y = -5.0f;
+	public const float z = 0.0f;
+	public const float thetaX = 0.0f;
+	public const float thetaY = 0.0f;
+	public const float thetaZ = 0.0f;
+  }
 
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
   [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
@@ -78,6 +106,8 @@ public class HandController : MonoBehaviour
   private bool gripButtonUp = false;      //True when side grip buttons button starts being released  
   private bool gripButtonPressed = false; //True when side grip buttons button is being held down
 
+  private Valve.VR.EVRButtonId touchpad = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
+
   private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedHandObj.index); } }
   private SteamVR_TrackedObject trackedHandObj;
 
@@ -95,7 +125,6 @@ public class HandController : MonoBehaviour
   void Start() {
 
 	trackedHandObj = GetComponent<SteamVR_TrackedObject>();  //Left or right controller
-
 
 	Debug.Log("START");
 	if (TestFunction() == TEST_PASSED) {
@@ -175,7 +204,18 @@ public class HandController : MonoBehaviour
 	  float thetaX = NormalizeValue (controllerRotation.x);
 	  float thetaY = NormalizeValue (controllerRotation.y);
 	  float thetaZ = NormalizeValue (controllerRotation.z);
-	  DoMoveArm(x, y, z, thetaX, thetaY, thetaZ);
+//	  DoMoveArm(x, y, z, thetaX, thetaY, thetaZ);
+	  DoMoveArm(ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetY, ArmTargetZ);
+	}
+
+	if (controller.GetPress(touchpad)) {
+	  if (controller.GetAxis (touchpad).y > 0.5f) {
+		Debug.Log ("Touchpad Up pressed");
+		DoMoveArm (RaiseTheRoof.x, RaiseTheRoof.y, RaiseTheRoof.z, RaiseTheRoof.thetaX, RaiseTheRoof.thetaY, RaiseTheRoof.thetaZ);
+	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
+		Debug.Log ("Touchpad Down pressed");
+		DoMoveArm (RestingPostion.x, RestingPostion.y, RestingPostion.z, RestingPostion.thetaX, RestingPostion.thetaY, RestingPostion.thetaZ);
+	  }
 	}
 
 	if (controller.GetPressDown (gripButton)) {
