@@ -69,9 +69,6 @@ public class HandController : MonoBehaviour
   static public int TEST_PASSED = 22; //Constant used inside the Kinova ARM_base.cpp file
 
   private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger; //Map VIVE trigger button to ID
-  private bool triggerButtonDown = false;    //True when trigger button starts being pressed
-  private bool triggerButtonUp = false;      //True when trigger button starts being released  
-  private bool triggerButtonPressed = false; //True when trigger button is being held down
 
   private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;  //Map VIVE side grip button to ID
   private bool gripButtonDown = false;    //True when side grip buttons starts being pressed
