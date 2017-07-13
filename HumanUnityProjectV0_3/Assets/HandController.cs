@@ -98,16 +98,16 @@ public class HandController : MonoBehaviour
   }
 
   // Arm hanging to the side
-  Position RestingPosition = new Position(-0.0387f, 0.6688f, 0.2935f, -1.5685f, -0.3162f, 3.1295f);
+  Position RestingPosition = new Position(0.04f, 0.67f, 0.29f, -1.57f, -0.32f, -1.94f);
 
   // Arm raised up
-  Position RaiseTheRoof = new Position(-0.0869f, -0.6620f, 0.2828f, 1.51f, 0.0447f, 0.023f);
+  Position RaiseTheRoof = new Position(-0.09f, -0.66f, 0.28f, 1.51f, 0.04f, 0.02f);
 
   // Arm stretched out from the shoulder
-  Position StretchOut = new Position(-0.0814f, 0.0108f, 0.9766f, -0.0635f, 0.0035f, -1.5469f);
+  Position StretchOut = new Position(-0.08f, 0.01f, 0.98f, -0.06f, 0.01f, -1.55f);
 
   // Arm flexing biceps
-  Position FlexBiceps = new Position(-0.0826f, -0.4568f, 0.2192f, 1.3709f, -0.2637f, -0.1739f);
+  Position FlexBiceps = new Position(-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, -0.17f);
 
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
