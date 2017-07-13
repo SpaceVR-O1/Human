@@ -100,8 +100,14 @@ public class HandController : MonoBehaviour
   // Arm hanging to the side
   Position RestingPosition = new Position(0f, 4f, 0f, 0f, 0f, 0f);
 
-  // Arm hanging to the side
-  Position RaiseTheRoof = new Position(0f, -5f, 0f, 0f, 0f, 0f);
+  // Arm raised up
+  Position RaiseTheRoof = new Position(0f, -4f, 0f, 0f, 0f, 0f);
+
+  // Arm stretched out from the shoulder
+  Position StretchOut = new Position(0f, -0.1f, 1f, 0f, 0f, 0f);
+
+  // Arm flexing biceps
+  Position FlexBiceps = new Position(0f, -0.1f, 0.5f, 0f, 0f, 0f);
 
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
@@ -237,6 +243,12 @@ public class HandController : MonoBehaviour
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
 		MoveArm (RestingPosition);
+	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
+		Debug.Log ("Touchpad Right pressed");
+		MoveArm (StretchOut);
+	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
+		Debug.Log ("Touchpad Left pressed");
+		MoveArm (FlexBiceps);
 	  }
 	}
 
