@@ -109,6 +109,9 @@ public class HandController : MonoBehaviour
   // Arm flexing biceps
   Position FlexBiceps = new Position(-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, -0.17f);
 
+  // Arm flexing biceps
+  Position Scooping = new Position(-0.31f, 0.31f, 0.47f, 0.28f, -0.95f, -2.73f);
+
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
   [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
@@ -253,7 +256,8 @@ public class HandController : MonoBehaviour
 	}
 
 	if (controller.GetPressDown (gripButton)) {
-	  MoveArm (.2f, -.4f, .5f, 1.5f, .8f, .04f);
+	  Debug.Log ("Grip button pressed");
+	  MoveArm (Scooping);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
