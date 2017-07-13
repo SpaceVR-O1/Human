@@ -49,7 +49,7 @@ public class HandController : MonoBehaviour
 
   public float NormalizationFactor = 1.0f;
   public float ArmTargetX = 0.0f;
-  public float ArmTargetY = 0.0f;
+  public float ArmTargetY = 1.0f;
   public float ArmTargetZ = 0.0f;
   public float ArmTargetThetaX = 0.0f;
   public float ArmTargetThetaY = 0.0f;
@@ -98,16 +98,16 @@ public class HandController : MonoBehaviour
   }
 
   // Arm hanging to the side
-  Position RestingPosition = new Position(0f, 4f, 0f, 0f, 0f, 0f);
+  Position RestingPosition = new Position(-0.0387f, 0.6688f, 0.2935f, -1.5685f, -0.3162f, 3.1295f);
 
   // Arm raised up
-  Position RaiseTheRoof = new Position(0f, -4f, 0f, 0f, 0f, 0f);
+  Position RaiseTheRoof = new Position(-0.0869f, -0.6620f, 0.2828f, 1.51f, 0.0447f, 0.023f);
 
   // Arm stretched out from the shoulder
-  Position StretchOut = new Position(0f, -0.1f, 1f, 0f, 0f, 0f);
+  Position StretchOut = new Position(-0.0814f, 0.0108f, 0.9766f, -0.0635f, 0.0035f, -1.5469f);
 
   // Arm flexing biceps
-  Position FlexBiceps = new Position(0f, -0.1f, 0.5f, 0f, 0f, 0f);
+  Position FlexBiceps = new Position(-0.0826f, -0.4568f, 0.2192f, 1.3709f, -0.2637f, -0.1739f);
 
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
