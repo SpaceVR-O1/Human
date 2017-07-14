@@ -244,19 +244,37 @@ public class HandController : MonoBehaviour
    * Update(): Is the main workhorse function for frame updates.
    * While FixedUpdate() and and LateUpdate() add extra features.
    */
-  void Update() {
+  void Update ()
+		{
 
-	Vector3 controllerPosition = GetGlobalPosition();
-	Vector3 controllerRotation = GetLocalRotation();
+				Vector3 controllerPosition = GetGlobalPosition ();
+				Vector3 controllerRotation = GetLocalRotation ();
 
-	if (controller.GetPressDown (menuButton)) {
-	  Debug.Log ("Menu pressed");
-	  MoveArm (HomePosition);
-	}
+				if (controller.GetPressDown (menuButton)) {
+						Debug.Log ("Menu pressed");
+						MoveArm (HomePosition);
+				}
 
-	if (controller.GetPressDown (triggerButton)) {
-	  Debug.Log ("Trigger pressed");
-	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
+				if (controller.GetPressDown (triggerButton)) {
+						Debug.Log ("Trigger pressed");
+//	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
+				}
+
+				if (controller.GetPress (triggerButton)) {
+						float yMin = RaiseTheRoof.Y; // -0.60
+						float yMax = HomePosition.Y; // -0.26
+						float yTarget = (controllerPosition.y - 0.75f) * -1;
+						float xMin = HomePosition.X; // -0.21
+						float xMax = RaiseTheRoof.X; // -0.15
+						float xTarget = (controllerPosition.x - 0.5f) * -1;
+
+						if (yTarget > yMin && yTarget < yMax) {
+								Debug.Log ("Arm Target Y within valid range!");
+								if (xTarget > xMin && xTarget < xMax) {
+										Debug.Log ("Arm Target X within valid range!");
+										MoveArm (new Position (xTarget, yTarget, 0.47f, 1.5924f, -1.1792f, 0f));
+								}
+						}
 	}
 
 	if (controller.GetPressDown(touchpad)) {
@@ -318,23 +336,23 @@ public class HandController : MonoBehaviour
 	}//END GETPRESSDWN IF() STATEMENT
 	  
 
-	if (controller.GetPress(triggerButton)){ //User started to pull trigger
-	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " pulled, starting to CLOSE hand.");
-	     
-		
-	}//END TRIGGERBUTTONDOWN IF() STATEMENT
-
-	if (controller.GetPressDown(triggerButton)){ //User held down trigger
-	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " hand in fist.");
-	  handOpen = false;
-	  //MoveHand(Convert.ToInt16(FIST, 2));
-	} 
-
-	if (controller.GetPressUp(triggerButton)) { //User released trigger
-	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " released, starting to OPEN hand.");
-	  handOpen = true;
-	  //MoveHand(Convert.ToInt16(OPEN_HAND, 2));
-	} 
+//	if (controller.GetPress(triggerButton)){ //User started to pull trigger
+//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " pulled, starting to CLOSE hand.");
+//	     
+//		
+//	}//END TRIGGERBUTTONDOWN IF() STATEMENT
+//
+//	if (controller.GetPressDown(triggerButton)){ //User held down trigger
+//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " hand in fist.");
+//	  handOpen = false;
+//	  //MoveHand(Convert.ToInt16(FIST, 2));
+//	} 
+//
+//	if (controller.GetPressUp(triggerButton)) { //User released trigger
+//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " released, starting to OPEN hand.");
+//	  handOpen = true;
+//	  //MoveHand(Convert.ToInt16(OPEN_HAND, 2));
+//	} 
 
 
   }//END UPDATE() FUNCTION
