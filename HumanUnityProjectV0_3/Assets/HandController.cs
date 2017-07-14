@@ -96,6 +96,8 @@ public class HandController : MonoBehaviour
 		return value * normalizationFactor;
   	}
   }
+  // HOME (Cartesian Position for Joystick Home)
+  Position HomePosition = new Position(-0.2100f, -0.2616f, 0.4767f, 1.5602f, -1.1464f, -0.0305f);
 
   // Arm hanging to the side
   Position RestingPosition = new Position(0.04f, 0.67f, 0.29f, -1.57f, -0.32f, -1.94f);
@@ -143,6 +145,7 @@ public class HandController : MonoBehaviour
   private bool gripButtonPressed = false; //True when side grip buttons button is being held down
 
   private Valve.VR.EVRButtonId touchpad = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
+  private Valve.VR.EVRButtonId menuButton = Valve.VR.EVRButtonId.k_EButton_ApplicationMenu;
 
   private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedHandObj.index); } }
   private SteamVR_TrackedObject trackedHandObj;
@@ -230,7 +233,11 @@ public class HandController : MonoBehaviour
 	Vector3 controllerPosition = GetGlobalPosition();
 	Vector3 controllerRotation = GetLocalRotation();
 
-	if (controller.GetPress(triggerButton)) {
+	if (controller.GetPressDown (menuButton)) {
+	  Debug.Log ("Menu pressed");
+	  MoveArm (HomePosition);
+	}
+
 	if (controller.GetPressDown (triggerButton)) {
 	  Debug.Log ("Trigger pressed");
 	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
