@@ -229,13 +229,8 @@ public class HandController : MonoBehaviour
 
 	Vector3 controllerPosition = GetGlobalPosition();
 	Vector3 controllerRotation = GetLocalRotation();
-	float temp = 5.0f;
-
-	//MoveArm (temp, temp, temp, temp, temp, temp);
 
 	if (controller.GetPress(triggerButton)) {
-//	  MoveArm (NormalizedPosition.FactoryMethod(NormalizationFactor, controllerPosition.x, controllerPosition.y,
-//	  		controllerPosition.z, controllerRotation.x, controllerRotation.y, controllerRotation.z));
 	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 	}
 
