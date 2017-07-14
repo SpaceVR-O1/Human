@@ -64,15 +64,19 @@ public class HandController : MonoBehaviour
 	public float ThetaY { get; }
 	public float ThetaZ { get; }
 
-	public Position(float x, float y, float z, float thetaX, float thetaY, float thetaZ) {
-  		X = x;
-  		Y = y;
-  		Z = z;
-  		ThetaX = thetaX;
-		ThetaY = thetaY;
-		ThetaZ = thetaZ;
-  	}
-  }
+	public Position(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	{
+	  // meters
+	  X = x;
+	  Y = y;
+	  Z = z;
+
+	  // radians
+	  ThetaX = thetaX;
+	  ThetaY = thetaY;
+	  ThetaZ = thetaZ; // wrist rotation
+	}
+}
 
   class NormalizedPosition : Position
   {
@@ -96,23 +100,35 @@ public class HandController : MonoBehaviour
 		return value * normalizationFactor;
   	}
   }
+
+	// Only path that is non-blocking at the moment:
+	// RaiseTheRoof <--> Home Position <--> Scooping
+
   // HOME (Cartesian Position for Joystick Home)
-  Position HomePosition = new Position(-0.2100f, -0.2616f, 0.4767f, 1.5602f, -1.1464f, -0.0305f);
+  // note: since Joystick home positions the arm by actuator, this
+  // home position will not exactly match Joystick home
+  Position HomePosition =
+				new Position(-0.21f, -0.26f, 0.47f, 1.5924f, -1.1792f, 0f);
+  
+  // Arm raised up
+  Position RaiseTheRoof =
+				new Position(-0.15f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
+
+  // Arm ready to scoop ice cream
+  Position Scooping =
+				new Position(-0.15f, 0.41f, 0.57f, -1.6554f, -0.6633f, 0f);
+	
+	// Arm stretched out from the shoulder
+	Position StretchOut =
+			new Position(-0.11f, -0.25f, 0.75f, 1.5956f, 0.0318f, 0f);
 
   // Arm hanging to the side
-  Position RestingPosition = new Position(0.04f, 0.67f, 0.29f, -1.57f, -0.32f, -1.94f);
-
-  // Arm raised up
-  Position RaiseTheRoof = new Position(-0.09f, -0.66f, 0.28f, 1.51f, 0.04f, 0.02f);
-
-  // Arm stretched out from the shoulder
-  Position StretchOut = new Position(-0.08f, 0.01f, 0.98f, -0.06f, 0.01f, -1.55f);
+  Position RestingPosition =
+				new Position(0.04f, 0.67f, 0.29f, -1.57f, -0.32f, 0f);
 
   // Arm flexing biceps
-  Position FlexBiceps = new Position(-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, -0.17f);
-
-  // Arm flexing biceps
-  Position Scooping = new Position(-0.31f, 0.31f, 0.47f, 0.28f, -0.95f, -2.73f);
+  Position FlexBiceps =
+				new Position(-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, 0f);
 
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
@@ -323,6 +339,10 @@ public class HandController : MonoBehaviour
 
   }//END UPDATE() FUNCTION
 
+  /**
+   * meters for x, y, z
+   * radians for thetaX, thetaY, thetaZ
+   **/
   void MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
