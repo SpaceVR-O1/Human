@@ -231,10 +231,12 @@ public class HandController : MonoBehaviour
 	Vector3 controllerRotation = GetLocalRotation();
 
 	if (controller.GetPress(triggerButton)) {
+	if (controller.GetPressDown (triggerButton)) {
+	  Debug.Log ("Trigger pressed");
 	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 	}
 
-	if (controller.GetPress(touchpad)) {
+	if (controller.GetPressDown(touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
 		MoveArm (RaiseTheRoof);
