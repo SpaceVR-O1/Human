@@ -47,6 +47,9 @@ public class HandController : MonoBehaviour
   static public string INDEX_EXTENDED = "00001000";
   static public string THUMB_EXTENDED = "00010000";
 
+  public float OffsetX = -0.5f;
+  public float OffsetY = -0.7f;
+  public float OffsetZ = -62.5f;
   public float NormalizationFactor = 1.0f;
   public float ArmTargetX = 0.0f;
   public float ArmTargetY = 1.0f;
@@ -284,18 +287,26 @@ public class HandController : MonoBehaviour
 	}
 
 	if (controller.GetPress (triggerButton)) {
-	  float yMin = RaiseTheRoof.Y; // -0.60
-	  float yMax = HomePosition.Y; // -0.26
-	  float yTarget = (controllerPosition.y - 0.75f) * -1;
-	  float xMin = HomePosition.X; // -0.21
-	  float xMax = RaiseTheRoof.X; // -0.15
-	  float xTarget = (controllerPosition.x - 0.5f) * -1;
+	  float xMin = 0.1f;
+	  float xMax = 0.4f;
+	  float xTarget = (controllerPosition.z + OffsetZ);
+	  float yMin = -0.6f;
+	  float yMax = -0.2f;
+	  float yTarget = (controllerPosition.y + OffsetY) * -1;
+	  float zMin = 0.1f;
+	  float zMax = 0.4f;
+	  float zTarget = (controllerPosition.x + OffsetX);
 
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
+		Debug.Log ("Arm Target X: " + xTarget);
 		if (xTarget > xMin && xTarget < xMax) {
 		  Debug.Log ("Arm Target X within valid range!");
-		  MoveArm (new Position (xTarget, yTarget, 0.47f, 1.5924f, -1.1792f, 0f));
+		  Debug.Log ("Arm Target Z: " + zTarget);
+		  if (zTarget > zMin && zTarget < zMax) {
+			Debug.Log ("Arm Target Z within valid range!");
+			MoveArm (new Position (xTarget, yTarget, zTarget, 1.5924f, -1.1792f, 0f));
+		  }
 		}
 	  }
 	}
