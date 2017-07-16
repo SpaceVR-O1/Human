@@ -289,7 +289,7 @@ public class HandController : MonoBehaviour
 	if (controller.GetPress (triggerButton)) {
 	  float xMin = 0.1f;
 	  float xMax = 0.4f;
-	  float xTarget = (controllerPosition.z + OffsetZ);
+	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
 	  float yMin = -0.6f;
 	  float yMax = -0.2f;
 	  float yTarget = (controllerPosition.y + OffsetY) * -1;
