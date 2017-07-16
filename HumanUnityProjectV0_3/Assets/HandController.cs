@@ -28,8 +28,8 @@
 * 
 */
 using System;
-using System.Timers; 
-using System.Collections;    
+using System.Timers;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -38,14 +38,14 @@ using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
-  static public bool LOCAL_DEBUG_STATEMENTS_ON = false;     
-  static public string OPEN_HAND       = "00000000";
-  static public string FIST            = "00011111";
-  static public string PINKY_EXTENDED  = "00000001";
-  static public string RING_EXTENDED   = "00000010";
+  static public bool LOCAL_DEBUG_STATEMENTS_ON = false;
+  static public string OPEN_HAND = "00000000";
+  static public string FIST = "00011111";
+  static public string PINKY_EXTENDED = "00000001";
+  static public string RING_EXTENDED = "00000010";
   static public string MIDDLE_EXTENDED = "00000100";
-  static public string INDEX_EXTENDED  = "00001000";
-  static public string THUMB_EXTENDED  = "00010000";
+  static public string INDEX_EXTENDED = "00001000";
+  static public string THUMB_EXTENDED = "00010000";
 
   public float NormalizationFactor = 1.0f;
   public float ArmTargetX = 0.0f;
@@ -57,14 +57,19 @@ public class HandController : MonoBehaviour
 
   class Position
   {
-  	public float X { get; }
+	public float X { get; }
+
 	public float Y { get; }
+
 	public float Z { get; }
+
 	public float ThetaX { get; }
+
 	public float ThetaY { get; }
+
 	public float ThetaZ { get; }
 
-	public Position(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	public Position (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
 	{
 	  // meters
 	  X = x;
@@ -76,97 +81,114 @@ public class HandController : MonoBehaviour
 	  ThetaY = thetaY;
 	  ThetaZ = thetaZ; // wrist rotation
 	}
-}
+  }
 
   class NormalizedPosition : Position
   {
-	private NormalizedPosition(float x, float y, float z, float thetaX, float thetaY, float thetaZ) : base(
-			x, y, z, thetaX, thetaY, thetaZ)
-	{ }
-
-	public static NormalizedPosition FactoryMethod(float normalizationFactor, float x, float y, float z, float thetaX,
-			float thetaY, float thetaZ) {
-		return new NormalizedPosition(
-				NormalizeValue(x, normalizationFactor),
-				NormalizeValue(y, normalizationFactor),
-				NormalizeValue(z, normalizationFactor),
-				NormalizeValue(thetaX, normalizationFactor),
-				NormalizeValue(thetaY, normalizationFactor),
-				NormalizeValue(thetaZ, normalizationFactor));
+	private NormalizedPosition (float x, float y, float z, float thetaX, float thetaY, float thetaZ) : base (
+		x, y, z, thetaX, thetaY, thetaZ)
+	{
 	}
 
-	private static float NormalizeValue(float value, float normalizationFactor)
-  	{
-		return value * normalizationFactor;
-  	}
+	public static NormalizedPosition FactoryMethod (float normalizationFactor, float x, float y, float z, float thetaX,
+	                                                float thetaY, float thetaZ)
+	{
+	  return new NormalizedPosition (
+		NormalizeValue (x, normalizationFactor),
+		NormalizeValue (y, normalizationFactor),
+		NormalizeValue (z, normalizationFactor),
+		NormalizeValue (thetaX, normalizationFactor),
+		NormalizeValue (thetaY, normalizationFactor),
+		NormalizeValue (thetaZ, normalizationFactor));
+	}
+
+	private static float NormalizeValue (float value, float normalizationFactor)
+	{
+	  return value * normalizationFactor;
+	}
   }
 
-	// Only path that is non-blocking at the moment:
-	// RaiseTheRoof <--> Home Position <--> Scooping
+  // Only path that is non-blocking at the moment:
+  // RaiseTheRoof <--> Home Position <--> Scooping
 
   // HOME (Cartesian Position for Joystick Home)
   // note: since Joystick home positions the arm by actuator, this
   // home position will not exactly match Joystick home
   Position HomePosition =
-				new Position(-0.21f, -0.26f, 0.47f, 1.5924f, -1.1792f, 0f);
+	new Position (-0.21f, -0.26f, 0.47f, 1.5924f, -1.1792f, 0f);
   
   // Arm raised up
   Position RaiseTheRoof =
-				new Position(-0.15f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
+	new Position (-0.15f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
 
   // Arm ready to scoop ice cream
   Position Scooping =
-				new Position(-0.15f, 0.41f, 0.57f, -1.6554f, -0.6633f, 0f);
+	new Position (-0.15f, 0.41f, 0.57f, -1.6554f, -0.6633f, 0f);
 	
-	// Arm stretched out from the shoulder
-	Position StretchOut =
-			new Position(-0.11f, -0.25f, 0.75f, 1.5956f, 0.0318f, 0f);
+  // Arm stretched out from the shoulder
+  Position StretchOut =
+	new Position (-0.11f, -0.25f, 0.75f, 1.5956f, 0.0318f, 0f);
 
   // Arm hanging to the side
   Position RestingPosition =
-				new Position(0.04f, 0.67f, 0.29f, -1.57f, -0.32f, 0f);
+	new Position (0.04f, 0.67f, 0.29f, -1.57f, -0.32f, 0f);
 
   // Arm flexing biceps
   Position FlexBiceps =
-				new Position(-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, 0f);
+	new Position (-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, 0f);
 
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
-  [DllImport("ARM_base_32", EntryPoint = "TestFunction")]
-  public static extern int TestFunction();
-  [DllImport("ARM_base_32", EntryPoint = "InitRobot")]
-  public static extern int InitRobot();
-  [DllImport("ARM_base_32", EntryPoint = "MoveHand")]
-  public static extern int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
+  [DllImport ("ARM_base_32", EntryPoint = "TestFunction")]
+  public static extern int TestFunction ();
+
+  [DllImport ("ARM_base_32", EntryPoint = "InitRobot")]
+  public static extern int InitRobot ();
+
+  [DllImport ("ARM_base_32", EntryPoint = "MoveHand")]
+  public static extern int MoveHand (float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   //public static extern int MoveArm();
   //public static extern int MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   //[DllImport("ARM_base.dll", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
   //public static extern int MoveHand(Int16 gloveState);
-  [DllImport("ARM_base_32", EntryPoint = "CloseDevice")]
-  public static extern int CloseDevice();
+  [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
+  public static extern int CloseDevice ();
 
   private bool initSuccessful = false;
-  private bool handOpen = true;       //If false hand is in closed fist
-  private bool armsActive = false;    //If false users arm movements don't cause the robot to move.
-  static public int TEST_PASSED = 22; //Constant used inside the Kinova ARM_base.cpp file
+  private bool handOpen = true;
+  //If false hand is in closed fist
+  private bool armsActive = false;
+  //If false users arm movements don't cause the robot to move.
+  static public int TEST_PASSED = 22;
+  //Constant used inside the Kinova ARM_base.cpp file
 
-  private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger; //Map VIVE trigger button to ID
-  private bool triggerButtonDown = false;    //True when trigger button starts being pressed
-  private bool triggerButtonUp = false;      //True when trigger button starts being released  
-  private bool triggerButtonPressed = false; //True when trigger button is being held down
+  private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+  //Map VIVE trigger button to ID
+  private bool triggerButtonDown = false;
+  //True when trigger button starts being pressed
+  private bool triggerButtonUp = false;
+  //True when trigger button starts being released
+  private bool triggerButtonPressed = false;
+  //True when trigger button is being held down
 
-  private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;  //Map VIVE side grip button to ID
-  private bool gripButtonDown = false;    //True when side grip buttons starts being pressed
-  private bool gripButtonUp = false;      //True when side grip buttons button starts being released  
-  private bool gripButtonPressed = false; //True when side grip buttons button is being held down
+  private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
+  //Map VIVE side grip button to ID
+  private bool gripButtonDown = false;
+  //True when side grip buttons starts being pressed
+  private bool gripButtonUp = false;
+  //True when side grip buttons button starts being released
+  private bool gripButtonPressed = false;
+  //True when side grip buttons button is being held down
 
   private Valve.VR.EVRButtonId touchpad = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
   private Valve.VR.EVRButtonId menuButton = Valve.VR.EVRButtonId.k_EButton_ApplicationMenu;
 
-  private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedHandObj.index); } }
+  private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input ((int)trackedHandObj.index); } }
+
   private SteamVR_TrackedObject trackedHandObj;
 
-  private GameObject pickup;             //Used by Unity3D collider and rigid body components to allow user interaction 
+  private GameObject pickup;
+  //Used by Unity3D collider and rigid body components to allow user interaction
 
   /**@brief Used for initialization of this class
    * 
@@ -177,65 +199,66 @@ public class HandController : MonoBehaviour
    * scene, the Start function will be called on all scripts before
    * Update, etc are called for any of them. 
    */
-  void Start() {
+  void Start ()
+  {
 
-	trackedHandObj = GetComponent<SteamVR_TrackedObject>();  //Left or right controller
+	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
-	Debug.Log("START");
-	if (TestFunction() == TEST_PASSED) {
-	  Debug.Log("Kinova robotic arm DLL import is working");
+	Debug.Log ("START");
+	if (TestFunction () == TEST_PASSED) {
+	  Debug.Log ("Kinova robotic arm DLL import is working");
+	} else {
+	  Debug.Log ("Kinova robotic arm DLL import is not working");
 	}
-	else {
-	  Debug.Log("Kinova robotic arm DLL import is not working");
-	}
 
-	int errorCode = InitRobot();
+	int errorCode = InitRobot ();
 	switch (errorCode) {
 	case 0:
 	  Debug.Log ("Kinova robotic arm loaded and device found");
 	  initSuccessful = true;
 	  break;
 	case -1:
-	  Debug.LogWarning("Robot APIs troubles");
+	  Debug.LogWarning ("Robot APIs troubles");
 	  break;
 	case -2:
-	  Debug.LogWarning("Robot - no device found");
+	  Debug.LogWarning ("Robot - no device found");
 	  break;
 	case -3:
-	  Debug.LogWarning("Robot - more devices found - not sure which to use");
+	  Debug.LogWarning ("Robot - more devices found - not sure which to use");
 	  break;
 	case -10:
-	  Debug.LogWarning("Robot APIs troubles: InitAPI");
+	  Debug.LogWarning ("Robot APIs troubles: InitAPI");
 	  break;
 	case -11:
-	  Debug.LogWarning("Robot APIs troubles: CloseAPI");
+	  Debug.LogWarning ("Robot APIs troubles: CloseAPI");
 	  break;
 	case -12:
-	  Debug.LogWarning("Robot APIs troubles: SendBasicTrajectory");
+	  Debug.LogWarning ("Robot APIs troubles: SendBasicTrajectory");
 	  break;
 	case -13:
-	  Debug.LogWarning("Robot APIs troubles: GetDevices");
+	  Debug.LogWarning ("Robot APIs troubles: GetDevices");
 	  break;
 	case -14:
-	  Debug.LogWarning("Robot APIs troubles: SetActiveDevice");
+	  Debug.LogWarning ("Robot APIs troubles: SetActiveDevice");
 	  break;
 	case -15:
-	  Debug.LogWarning("Robot APIs troubles: GetAngularCommand");
+	  Debug.LogWarning ("Robot APIs troubles: GetAngularCommand");
 	  break;
 	case -16:
-	  Debug.LogWarning("Robot APIs troubles: MoveHome");
+	  Debug.LogWarning ("Robot APIs troubles: MoveHome");
 	  break;
 	case -17:
-	  Debug.LogWarning("Robot APIs troubles: InitFingers");
+	  Debug.LogWarning ("Robot APIs troubles: InitFingers");
 	  break;
 	case -123:
 	  Debug.LogWarning ("Robot APIs troubles: Command Layer Handle");
 	  break;
 	default:
-	  Debug.LogWarning("Robot - unknown error from initialization");
+	  Debug.LogWarning ("Robot - unknown error from initialization");
 	  break;
 	}
-  }//END START() FUNCTION
+  }
+  //END START() FUNCTION
 
   /**@brief Update() is called once per game frame. 
    * 
@@ -245,39 +268,39 @@ public class HandController : MonoBehaviour
    * While FixedUpdate() and and LateUpdate() add extra features.
    */
   void Update ()
-		{
+  {
 
-				Vector3 controllerPosition = GetGlobalPosition ();
-				Vector3 controllerRotation = GetLocalRotation ();
+	Vector3 controllerPosition = GetGlobalPosition ();
+	Vector3 controllerRotation = GetLocalRotation ();
 
-				if (controller.GetPressDown (menuButton)) {
-						Debug.Log ("Menu pressed");
-						MoveArm (HomePosition);
-				}
-
-				if (controller.GetPressDown (triggerButton)) {
-						Debug.Log ("Trigger pressed");
-//	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
-				}
-
-				if (controller.GetPress (triggerButton)) {
-						float yMin = RaiseTheRoof.Y; // -0.60
-						float yMax = HomePosition.Y; // -0.26
-						float yTarget = (controllerPosition.y - 0.75f) * -1;
-						float xMin = HomePosition.X; // -0.21
-						float xMax = RaiseTheRoof.X; // -0.15
-						float xTarget = (controllerPosition.x - 0.5f) * -1;
-
-						if (yTarget > yMin && yTarget < yMax) {
-								Debug.Log ("Arm Target Y within valid range!");
-								if (xTarget > xMin && xTarget < xMax) {
-										Debug.Log ("Arm Target X within valid range!");
-										MoveArm (new Position (xTarget, yTarget, 0.47f, 1.5924f, -1.1792f, 0f));
-								}
-						}
+	if (controller.GetPressDown (menuButton)) {
+	  Debug.Log ("Menu pressed");
+	  MoveArm (HomePosition);
 	}
 
-	if (controller.GetPressDown(touchpad)) {
+	if (controller.GetPressDown (triggerButton)) {
+	  Debug.Log ("Trigger pressed");
+//	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
+	}
+
+	if (controller.GetPress (triggerButton)) {
+	  float yMin = RaiseTheRoof.Y; // -0.60
+	  float yMax = HomePosition.Y; // -0.26
+	  float yTarget = (controllerPosition.y - 0.75f) * -1;
+	  float xMin = HomePosition.X; // -0.21
+	  float xMax = RaiseTheRoof.X; // -0.15
+	  float xTarget = (controllerPosition.x - 0.5f) * -1;
+
+	  if (yTarget > yMin && yTarget < yMax) {
+		Debug.Log ("Arm Target Y within valid range!");
+		if (xTarget > xMin && xTarget < xMax) {
+		  Debug.Log ("Arm Target X within valid range!");
+		  MoveArm (new Position (xTarget, yTarget, 0.47f, 1.5924f, -1.1792f, 0f));
+		}
+	  }
+	}
+
+	if (controller.GetPressDown (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
 		MoveArm (RaiseTheRoof);
@@ -299,22 +322,23 @@ public class HandController : MonoBehaviour
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
-	  Debug.Log("Controller #" + (int)trackedHandObj.index + " POSITION is:");
-	  Debug.Log("Global X = " + controllerPosition.x + " Local X =  " + this.transform.localPosition.x);
-	  Debug.Log("Global Y = " + controllerPosition.y + " Local Y =  " + this.transform.localPosition.y);
-	  Debug.Log("Global Z = " + controllerPosition.z + " Local Z =  " + this.transform.localPosition.z);
+	  Debug.Log ("Controller #" + (int)trackedHandObj.index + " POSITION is:");
+	  Debug.Log ("Global X = " + controllerPosition.x + " Local X =  " + this.transform.localPosition.x);
+	  Debug.Log ("Global Y = " + controllerPosition.y + " Local Y =  " + this.transform.localPosition.y);
+	  Debug.Log ("Global Z = " + controllerPosition.z + " Local Z =  " + this.transform.localPosition.z);
 
-	  Debug.Log("Controller #" + (int)trackedHandObj.index + " ROTATION is:");
-	  Debug.Log("Local thetaX =  " + this.transform.localPosition.x);
-	  Debug.Log("Local thetaY =  " + this.transform.localPosition.y);
-	  Debug.Log("Local thetaZ =  " + this.transform.localPosition.z);
+	  Debug.Log ("Controller #" + (int)trackedHandObj.index + " ROTATION is:");
+	  Debug.Log ("Local thetaX =  " + this.transform.localPosition.x);
+	  Debug.Log ("Local thetaY =  " + this.transform.localPosition.y);
+	  Debug.Log ("Local thetaZ =  " + this.transform.localPosition.z);
 	}
 
 
 
 	//CAPTURE CONTRLLER BUTTON INTERACTION
 	if (controller == null) {
-	  if(Main.DEBUG_STATEMENTS_ON) Debug.Log("Hand controller not found. Please turn on at least one HTC VIVE controller.");
+	  if (Main.DEBUG_STATEMENTS_ON)
+		Debug.Log ("Hand controller not found. Please turn on at least one HTC VIVE controller.");
 	  return; //Stops null reference expections
 	}
 
@@ -334,52 +358,33 @@ public class HandController : MonoBehaviour
 		armsActive = false;
 	  }
 	}//END GETPRESSDWN IF() STATEMENT
-	  
 
-//	if (controller.GetPress(triggerButton)){ //User started to pull trigger
-//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " pulled, starting to CLOSE hand.");
-//	     
-//		
-//	}//END TRIGGERBUTTONDOWN IF() STATEMENT
-//
-//	if (controller.GetPressDown(triggerButton)){ //User held down trigger
-//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " hand in fist.");
-//	  handOpen = false;
-//	  //MoveHand(Convert.ToInt16(FIST, 2));
-//	} 
-//
-//	if (controller.GetPressUp(triggerButton)) { //User released trigger
-//	  if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Trigger " + (int)trackedHandObj.index + " released, starting to OPEN hand.");
-//	  handOpen = true;
-//	  //MoveHand(Convert.ToInt16(OPEN_HAND, 2));
-//	} 
-
-
-  }//END UPDATE() FUNCTION
+  }
+  //END UPDATE() FUNCTION
 
   /**
    * meters for x, y, z
    * radians for thetaX, thetaY, thetaZ
    **/
-  void MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+  void MoveArm (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
 	  if (initSuccessful) {
-		Debug.Log("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
-				+ ")");
-		MoveHand(x, y, z, thetaX, thetaY, thetaZ);
+		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+		+ ")");
+		MoveHand (x, y, z, thetaX, thetaY, thetaZ);
 	  }
-	} catch(EntryPointNotFoundException e) {
-	  Debug.Log(e.Data);
-	  Debug.Log(e.GetType());
-	  Debug.Log(e.GetBaseException());
+	} catch (EntryPointNotFoundException e) {
+	  Debug.Log (e.Data);
+	  Debug.Log (e.GetType ());
+	  Debug.Log (e.GetBaseException ());
 
 	}
   }
 
-  void MoveArm(Position position)
+  void MoveArm (Position position)
   {
-	MoveArm(position.X, position.Y, position.Z, position.ThetaX, position.ThetaY, position.ThetaZ);
+	MoveArm (position.X, position.Y, position.Z, position.ThetaX, position.ThetaY, position.ThetaZ);
   }
 
   /**@brief OnApplicationQuit() is called when application closes.
@@ -392,9 +397,10 @@ public class HandController : MonoBehaviour
    * before the application is quit. In the editor it is called 
    * when the user stops playmode.
    */
-  private void OnApplicationQuit() {
+  private void OnApplicationQuit ()
+  {
 	//Clean up memory and and UI timers used  (e.g. armTimer.Close();)
-	CloseDevice();
+	CloseDevice ();
   }
 
   /**@brief OnTriggerEnter() is called on collider trigger events.
@@ -403,8 +409,10 @@ public class HandController : MonoBehaviour
    * 
    * OnTriggerEnter(): TO-DO???
    */
-  private void OnTriggerEnter(Collider collider) {
-	if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Colllider trigger ENTER");
+  private void OnTriggerEnter (Collider collider)
+  {
+	if (Main.DEBUG_STATEMENTS_ON)
+	  Debug.Log ("Colllider trigger ENTER");
 	pickup = collider.gameObject;
   }
 
@@ -414,8 +422,10 @@ public class HandController : MonoBehaviour
    * 
    * OnTriggerEnter(): TO-DO???
    */
-  private void OnTriggerExit(Collider collider) {
-	if (Main.DEBUG_STATEMENTS_ON) Debug.Log("Colllider trigger EXIT");
+  private void OnTriggerExit (Collider collider)
+  {
+	if (Main.DEBUG_STATEMENTS_ON)
+	  Debug.Log ("Colllider trigger EXIT");
 	pickup = null;
   }
 
@@ -426,9 +436,10 @@ public class HandController : MonoBehaviour
  * GetPosition(): returns X, Y, Z float coordinates to
  * ??? decimal points of hand controller in the global reference frame.
  */
-  public Vector3 GetGlobalPosition() {
+  public Vector3 GetGlobalPosition ()
+  {
 
-	Vector3 newPosition = new Vector3((float)this.transform.position.x, (float)this.transform.position.y, (float)this.transform.position.z);
+	Vector3 newPosition = new Vector3 ((float)this.transform.position.x, (float)this.transform.position.y, (float)this.transform.position.z);
 
 	return newPosition;
   }
@@ -441,9 +452,10 @@ public class HandController : MonoBehaviour
   * ??? decimal points of hand controller in the Hand Mounted Display 
   * LOCAL reference frame.
   */
-  public Vector3 GetLocalPosition() {
+  public Vector3 GetLocalPosition ()
+  {
 
-	Vector3 newPosition = new Vector3((float)this.transform.localPosition.x, (float)this.transform.localPosition.y, (float)this.transform.localPosition.z);
+	Vector3 newPosition = new Vector3 ((float)this.transform.localPosition.x, (float)this.transform.localPosition.y, (float)this.transform.localPosition.z);
 
 	return newPosition;
   }
@@ -456,9 +468,10 @@ public class HandController : MonoBehaviour
   * degrees to ??? decimal points of hand controller in the 
   * Hand Mounted Display LOCAL reference frame.
   */
-  Vector3 GetLocalRotation() {
+  Vector3 GetLocalRotation ()
+  {
 
-	Vector3 newPosition = new Vector3((float)this.transform.localRotation.x, (float)this.transform.localRotation.y, (float)this.transform.localRotation.z);
+	Vector3 newPosition = new Vector3 ((float)this.transform.localRotation.x, (float)this.transform.localRotation.y, (float)this.transform.localRotation.z);
 
 	return newPosition;
   }
@@ -472,7 +485,8 @@ public class HandController : MonoBehaviour
   * by calculating change in position of hand controller between 
   * two game engine frames renders / calls to Update().
   */
-  Vector3 GetGlobalVelocity(Vector3 previousPosition) {
+  Vector3 GetGlobalVelocity (Vector3 previousPosition)
+  {
 
 	float frameRate = (1 / Time.deltaTime);
 
@@ -480,7 +494,7 @@ public class HandController : MonoBehaviour
 	float newYvelocity = (previousPosition.y - this.transform.position.y) / frameRate;
 	float newZvelocity = (previousPosition.z - this.transform.position.z) / frameRate;
 
-	Vector3 newVelocity = new Vector3(newXvelocity, newYvelocity, newZvelocity);
+	Vector3 newVelocity = new Vector3 (newXvelocity, newYvelocity, newZvelocity);
 
 	return newVelocity;
   }
@@ -491,13 +505,15 @@ public class HandController : MonoBehaviour
   * 
   * GetGlobalAcceleration(): TO-DO???
   */
-  Vector3 GetGlobalAcceleration(Vector3 previousVelocity) {
+  Vector3 GetGlobalAcceleration (Vector3 previousVelocity)
+  {
 
-	Vector3 acceleration = new Vector3(0.00f, -9.81f, 0.00f); //WRONG!!!
+	Vector3 acceleration = new Vector3 (0.00f, -9.81f, 0.00f); //WRONG!!!
 
 	return acceleration;
   }
 
 
-}//END HANDCONTROLLER CLASS
+}
+//END HANDCONTROLLER CLASS
 
