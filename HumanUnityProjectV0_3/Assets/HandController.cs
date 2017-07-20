@@ -113,12 +113,14 @@ public class HandController : MonoBehaviour
 
   // Only path that is non-blocking at the moment:
   // RaiseTheRoof <--> Home Position <--> Scooping
+  // Note that all these positions are for the left arm
 
   // HOME (Cartesian Position for Joystick Home)
   // note: since Joystick home positions the arm by actuator, this
   // home position will not exactly match Joystick home
+
   Position HomePosition =
-	new Position (-0.21f, -0.26f, 0.47f, 1.5924f, -1.1792f, 0f);
+	new Position (0.29f, -0.26f, 0.29f, 1.5924f, -1.1792f, 0f);
   
   // Arm raised up
   Position RaiseTheRoof =
@@ -287,15 +289,24 @@ public class HandController : MonoBehaviour
 	}
 
 	if (controller.GetPress (triggerButton)) {
+	  float pi = (float) Math.PI;
 	  float xMin = 0.1f;
-	  float xMax = 0.4f;
+	  float xMax = 0.6f;
 	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
 	  float yMin = -0.6f;
 	  float yMax = -0.2f;
 	  float yTarget = (controllerPosition.y + OffsetY) * -1;
-	  float zMin = 0.1f;
-	  float zMax = 0.4f;
+	  float zMin = 0.15f;
+	  float zMax = 0.8f;
 	  float zTarget = (controllerPosition.x + OffsetX);
+	  float eulerX = transform.rotation.eulerAngles.x;
+	  float radX = eulerX * pi / 180f;
+	  float kinovaRadX = radX < pi ? radX * -1f : radX - pi;
+	  float thetaXTarget = kinovaRadX;
+	  float eulerY = transform.rotation.eulerAngles.y;
+	  float radY = eulerY * pi / 180f;
+	  float kinovaRadY = radY < pi ? radY * -1f : radY - pi;
+	  float thetaYTarget = kinovaRadY;
 
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
@@ -305,7 +316,11 @@ public class HandController : MonoBehaviour
 		  Debug.Log ("Arm Target Z: " + zTarget);
 		  if (zTarget > zMin && zTarget < zMax) {
 			Debug.Log ("Arm Target Z within valid range!");
-			MoveArm (new Position (xTarget, yTarget, zTarget, 1.5924f, -1.1792f, 0f));
+			Debug.Log ("eulerX: " + eulerX);
+			MoveArm (new Position (xTarget, yTarget, zTarget,
+//			        1.5924f, -1.1792f, 0f));
+			        thetaXTarget, -1.1792f, 0f));
+//					thetaXTarget, thetaYTarget, 0f));
 		  }
 		}
 	  }
