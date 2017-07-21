@@ -299,14 +299,6 @@ public class HandController : MonoBehaviour
 	  float zMin = 0.15f;
 	  float zMax = 0.8f;
 	  float zTarget = (controllerPosition.x + OffsetX);
-	  float eulerX = transform.rotation.eulerAngles.x;
-	  float radX = eulerX * pi / 180f;
-	  float kinovaRadX = radX < pi ? radX * -1f : radX - pi;
-	  float thetaXTarget = kinovaRadX;
-	  float eulerY = transform.rotation.eulerAngles.y;
-	  float radY = eulerY * pi / 180f;
-	  float kinovaRadY = radY < pi ? radY * -1f : radY - pi;
-	  float thetaYTarget = kinovaRadY;
 
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
@@ -316,11 +308,8 @@ public class HandController : MonoBehaviour
 		  Debug.Log ("Arm Target Z: " + zTarget);
 		  if (zTarget > zMin && zTarget < zMax) {
 			Debug.Log ("Arm Target Z within valid range!");
-			Debug.Log ("eulerX: " + eulerX);
 			MoveArm (new Position (xTarget, yTarget, zTarget,
-//			        1.5924f, -1.1792f, 0f));
-			        thetaXTarget, -1.1792f, 0f));
-//					thetaXTarget, thetaYTarget, 0f));
+			        1.65f, 0f, 0f));
 		  }
 		}
 	  }
