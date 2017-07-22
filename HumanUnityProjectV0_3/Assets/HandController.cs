@@ -150,14 +150,20 @@ public class HandController : MonoBehaviour
   [DllImport ("ARM_base_32", EntryPoint = "InitRobot")]
   public static extern int InitRobot ();
 
+  [DllImport ("ARM_base_32", EntryPoint = "MoveHome")]
+  public static extern int MoveHome ();
+
   [DllImport ("ARM_base_32", EntryPoint = "MoveHand")]
   public static extern int MoveHand (float x, float y, float z, float thetaX, float thetaY, float thetaZ);
-  //public static extern int MoveArm();
-  //public static extern int MoveArm(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
-  //[DllImport("ARM_base.dll", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-  //public static extern int MoveHand(Int16 gloveState);
+
+  [DllImport ("ARM_base_32", EntryPoint = "MoveHandNoThetaY")]
+  public static extern int MoveHandNoThetaY (float x, float y, float z, float thetaX, float thetaZ);
+
   [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice ();
+
+  [DllImport ("ARM_base_32", EntryPoint = "EraseAllTrajectories")]
+  public static extern int EraseAllTrajectories ();
 
   private bool initSuccessful = false;
   private bool handOpen = true;
@@ -255,6 +261,9 @@ public class HandController : MonoBehaviour
 	case -17:
 	  Debug.LogWarning ("Robot APIs troubles: InitFingers");
 	  break;
+	case -18:
+	  Debug.LogWarning ("Robot APIs troubles: StartForceControl");
+	  break;
 	case -123:
 	  Debug.LogWarning ("Robot APIs troubles: Command Layer Handle");
 	  break;
@@ -262,8 +271,86 @@ public class HandController : MonoBehaviour
 	  Debug.LogWarning ("Robot - unknown error from initialization");
 	  break;
 	}
+
+	if (initSuccessful) {
+	    // Send commands to arm at most every 5 ms
+	    InvokeRepeating("MoveArmToControllerPosition", 0.0f, 0.05f);
+	    InvokeRepeating("UnlockArm", 0.5f, 0.5f);
+	}
   }
   //END START() FUNCTION
+  void UnlockArm ()
+  {
+    Debug.Log("unlocking arm");
+    EraseAllTrajectories();
+  }
+
+  void MoveArmToControllerPosition ()
+  {
+	Vector3 controllerPosition = GetGlobalPosition ();
+	Vector3 controllerRotation = GetLocalRotation ();
+
+	if (controller.GetPress (triggerButton)) {
+	  float pi = (float)Math.PI;
+	  float xMin = 0.1f;
+	  float xMax = 0.6f;
+	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
+	  float yMin = -0.6f;
+	  float yMax = 0.5f;
+	  float yTarget = (controllerPosition.y + OffsetY) * -1;
+	  float zMin = 0.05f;
+	  float zMax = 0.8f;
+	  float zTarget = (controllerPosition.x + OffsetX);
+
+	  float eulerY = transform.rotation.eulerAngles.y;
+	  float radY = eulerY * pi / 180f;
+	  float kinovaRadY = radY < pi ? radY * -1f : radY - pi;
+	  float eulerX = transform.rotation.eulerAngles.x;
+	  if (kinovaRadY < 0 && eulerX > 90) { // turning left/up
+		eulerX = 275 - (eulerX - 275);
+	  }
+	  if (eulerX < 90) { // turning right/down
+		eulerX -= 180;
+	  } 
+	  if (kinovaRadY < 0 && eulerX < 0) { // turning left/down
+		eulerX = -90 - (eulerX + 90);
+	  }
+	  float radX = eulerX * pi / 180f;
+	  float kinovaRadX = radX < pi ? radX * -1f : radX - pi;
+	  if (eulerX < 0) { // turning right/down
+		kinovaRadX = radX;
+	  }
+	  float thetaYMin = -0.8f;
+	  float thetaYMax = 1.4f;
+
+	  Debug.Log ("eulerX: " + eulerX);
+	  Debug.Log ("radX: " + radX);
+	  Debug.Log ("kinovaRadX: " + kinovaRadX);
+	  Debug.Log ("eulerY: " + eulerY);
+	  Debug.Log ("radY: " + radY);
+	  Debug.Log ("kinovaRadY: " + kinovaRadY);
+	  if (yTarget > yMin && yTarget < yMax) {
+		Debug.Log ("Arm Target Y within valid range!");
+		Debug.Log ("Arm Target X: " + xTarget);
+		if (xTarget > xMin && xTarget < xMax) {
+		  Debug.Log ("Arm Target X within valid range!");
+		  Debug.Log ("Arm Target Z: " + zTarget);
+		  if (zTarget > zMin && zTarget < zMax) {
+			Debug.Log ("Arm Target Z within valid range!");
+			float targetThetaY = -1.1792f;
+//			if (kinovaRadY > thetaYMin && kinovaRadY < thetaYMax) {
+//			  Debug.Log ("Theta Y within valid range!");
+//			  targetThetaY = kinovaRadY;
+//			}
+//			MoveArm (new Position (xTarget, yTarget, zTarget,
+			MoveArmNoThetaY (new Position (xTarget, yTarget, zTarget,
+//			     kinovaRadX, targetThetaY, 0f));
+			     kinovaRadX, 1.4f, 0f));
+		  }
+		}
+	  }
+	}
+  }
 
   /**@brief Update() is called once per game frame. 
    * 
@@ -288,40 +375,14 @@ public class HandController : MonoBehaviour
 //	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 	}
 
-	if (controller.GetPress (triggerButton)) {
-	  float pi = (float) Math.PI;
-	  float xMin = 0.1f;
-	  float xMax = 0.6f;
-	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
-	  float yMin = -0.6f;
-	  float yMax = -0.2f;
-	  float yTarget = (controllerPosition.y + OffsetY) * -1;
-	  float zMin = 0.15f;
-	  float zMax = 0.8f;
-	  float zTarget = (controllerPosition.x + OffsetX);
-
-	  if (yTarget > yMin && yTarget < yMax) {
-		Debug.Log ("Arm Target Y within valid range!");
-		Debug.Log ("Arm Target X: " + xTarget);
-		if (xTarget > xMin && xTarget < xMax) {
-		  Debug.Log ("Arm Target X within valid range!");
-		  Debug.Log ("Arm Target Z: " + zTarget);
-		  if (zTarget > zMin && zTarget < zMax) {
-			Debug.Log ("Arm Target Z within valid range!");
-			MoveArm (new Position (xTarget, yTarget, zTarget,
-			        1.65f, 0f, 0f));
-		  }
-		}
-	  }
-	}
-
 	if (controller.GetPressDown (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
 		MoveArm (RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		MoveArm (RestingPosition);
+		EraseAllTrajectories();
+//		MoveArm (RestingPosition);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
 		MoveArm (StretchOut);
@@ -333,7 +394,8 @@ public class HandController : MonoBehaviour
 
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
-	  MoveArm (Scooping);
+//	  MoveArm (Scooping);
+	  MoveHome();
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -393,13 +455,35 @@ public class HandController : MonoBehaviour
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
 	  Debug.Log (e.GetBaseException ());
-
+	}
+  }
+  /**
+   * meters for x, y, z
+   * radians for thetaX, thetaZ
+   **/
+  void MoveArmNoThetaY (float x, float y, float z, float thetaX, float thetaZ)
+  {
+	try {
+	  if (initSuccessful) {
+		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
+		+ ")");
+		MoveHandNoThetaY (x, y, z, thetaX, thetaZ);
+	  }
+	} catch (EntryPointNotFoundException e) {
+	  Debug.Log (e.Data);
+	  Debug.Log (e.GetType ());
+	  Debug.Log (e.GetBaseException ());
 	}
   }
 
   void MoveArm (Position position)
   {
 	MoveArm (position.X, position.Y, position.Z, position.ThetaX, position.ThetaY, position.ThetaZ);
+  }
+
+  void MoveArmNoThetaY (Position position)
+  {
+	MoveArmNoThetaY (position.X, position.Y, position.Z, position.ThetaX, position.ThetaZ);
   }
 
   /**@brief OnApplicationQuit() is called when application closes.
@@ -531,4 +615,3 @@ public class HandController : MonoBehaviour
 
 }
 //END HANDCONTROLLER CLASS
-
