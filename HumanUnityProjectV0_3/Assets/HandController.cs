@@ -276,7 +276,7 @@ public class HandController : MonoBehaviour
 	if (initSuccessful) {
 	    // Send commands to arm at most every 5 ms
 	    InvokeRepeating("MoveArmToControllerPosition", 0.0f, 0.05f);
-	    InvokeRepeating("UnlockArm", 0.5f, 0.5f);
+//	    InvokeRepeating("UnlockArm", 0.5f, 0.5f);
 	}
   }
   //END START() FUNCTION
