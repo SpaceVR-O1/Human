@@ -166,6 +166,7 @@ public class HandController : MonoBehaviour
   public static extern int EraseAllTrajectories ();
 
   private bool initSuccessful = false;
+  private bool movingToPosition = false;
   private bool handOpen = true;
   //If false hand is in closed fist
   private bool armsActive = false;
@@ -281,8 +282,10 @@ public class HandController : MonoBehaviour
   //END START() FUNCTION
   void UnlockArm ()
   {
-    Debug.Log("unlocking arm");
-    EraseAllTrajectories();
+	if (!movingToPosition) {
+	  Debug.Log("unlocking arm");
+	  EraseAllTrajectories();
+	}
   }
 
   void MoveArmToControllerPosition ()
@@ -382,7 +385,6 @@ public class HandController : MonoBehaviour
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
 		EraseAllTrajectories();
-//		MoveArm (RestingPosition);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
 		MoveArm (StretchOut);
@@ -439,6 +441,20 @@ public class HandController : MonoBehaviour
   }
   //END UPDATE() FUNCTION
 
+  void PauseInterruptHeartbeat ()
+  {
+    float pauseSecs = 5f;
+    Debug.Log ("pausing arm unlock/interrupt for " + pauseSecs
+            + " seconds...");
+    movingToPosition = true;
+    Invoke ("ResumeInterruptHeartbeat", pauseSecs);
+  }
+
+  void ResumeInterruptHeartbeat ()
+  {
+    movingToPosition = false;
+  }
+
   /**
    * meters for x, y, z
    * radians for thetaX, thetaY, thetaZ
@@ -447,6 +463,7 @@ public class HandController : MonoBehaviour
   {
 	try {
 	  if (initSuccessful) {
+	    PauseInterruptHeartbeat ();
 		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
 		+ ")");
 		MoveHand (x, y, z, thetaX, thetaY, thetaZ);
