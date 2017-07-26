@@ -21,6 +21,8 @@ int(*MyGetDevices)(KinovaDevice devices[MAX_KINOVA_DEVICE], int &result);
 int(*MySetActiveDevice)(KinovaDevice device);
 int(*MyMoveHome)();
 int(*MyInitFingers)();
+int(*MyGetClientConfigurations(ClientConfigurations &config));
+int(*MySetClientConfigurations(ClientConfigurations config));
 int(*MyGetAngularCommand)(AngularPosition &);
 
 extern "C"
@@ -58,6 +60,8 @@ extern "C"
 		MyGetAngularCommand = (int(*)(AngularPosition &)) GetProcAddress(commandLayer_handle, "GetAngularCommand");
 		MyMoveHome = (int(*)()) GetProcAddress(commandLayer_handle, "MoveHome");
 		MyInitFingers = (int(*)()) GetProcAddress(commandLayer_handle, "InitFingers");
+		//MyGetClientConfigurations = (int(*)(ClientConfigurations)) GetProcAddress(commandLayer_handle, "GetClientConfigurations");
+		//MySetClientConfigurations = (int(*)(ClientConfigurations&)) GetProcAddress(commandLayer_handle, "SetClientConfigurations");
 
 		//Verify that all functions has been loaded correctly
 		if (MyInitAPI == NULL)
@@ -129,6 +133,43 @@ extern "C"
 
 		return 0;
 	}
+
+	/**
+	* @param pinky is extended if TRUE and close otherwise
+	* @param ring is extended if TRUE and close otherwise
+	* @param middle is extended if TRUE and close otherwise
+	* @param index is extended if TRUE and close otherwise
+	* @param thumb is extended if TRUE and close otherwise
+	*/
+	int MoveFingers(bool pinky, bool ring, bool middle, bool index, bool thumb) {
+	  FingersPosition MyHandStatus;
+	  /*
+	  ClientConfigurations AdaHandConfig;
+	  MySetClientConfigurations(AdaHandConfig);
+	  AdaHandConfig.Expansion[0] = (int) pinky; 
+	  AdaHandConfig.Expansion[1] = (int) ring;
+	  AdaHandConfig.Expansion[2] = (int) middle;
+	  AdaHandConfig.Expansion[3] = (int) index;
+	  AdaHandConfig.Expansion[4] = (int) thumb;
+	  */
+	  
+	  if (pinky && ring && middle && index && thumb) {
+	    //OPEN HAND CF_OpenHandOneFingers = 31, CF_OpenHandTwoFingers = 33,
+		//0.0 to 10.0 are the possible finger opening steps See KinovaTypes.h line 560 (struct FingersPosition)
+		MyHandStatus.Finger1 = 10.0f;  
+		MyHandStatus.Finger2 = 10.0f;
+		MyHandStatus.Finger3 = 10.0f;
+	  }
+	  else {
+		//CLOSE HAND CF_CloseHandOneFingers = 32, CF_CloseHandTwoFingers = 34,
+		MyHandStatus.Finger1 = 0.0f;
+		MyHandStatus.Finger2 = 0.0f;
+	    MyHandStatus.Finger3 = 0.0f;
+	  }
+
+	  return 0;
+	 
+	}//END MOVEFINGER FUNCTION
 
 	// Close device & free the library
 	int CloseDevice()

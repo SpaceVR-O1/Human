@@ -31,6 +31,7 @@ using System;
 using System.Timers; 
 using System.Collections;    
 using System.Collections.Generic;
+using System.Threading;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -62,6 +63,9 @@ public class HandController : MonoBehaviour
   //public static extern int MoveHand(Int16 gloveState);
   [DllImport("ARM_base_32", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice();
+  [DllImport("ARM_base_32", EntryPoint = "MoveFingers")]
+  public static extern int MoveFingers(bool pinky, bool ring, bool middle, bool index, bool thumb);
+
 
   private bool initSuccessful = false;
   private bool handOpen = true;       //If false hand is in closed fist
@@ -89,65 +93,69 @@ public class HandController : MonoBehaviour
    * scene, the Start function will be called on all scripts before
    * Update, etc are called for any of them. 
    */
-  void Start() {
+  void Start ()
+  {
 
-	trackedHandObj = GetComponent<SteamVR_TrackedObject>();  //Left or right controller
+	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
 
-	Debug.Log("START");
-	if (TestFunction() == TEST_PASSED) {
-	  Debug.Log("Kinova robotic arm DLL import is working");
+	Debug.Log ("START");
+	if (TestFunction () == TEST_PASSED) {
+	  Debug.Log ("Kinova robotic arm DLL import is working");
+	} else {
+	  Debug.Log ("Kinova robotic arm DLL import is not working");
 	}
-	else {
-	  Debug.Log("Kinova robotic arm DLL import is not working");
-	}
 
-	int errorCode = InitRobot();
+	int errorCode = InitRobot ();
 	switch (errorCode) {
 	case 0:
 	  Debug.Log ("Kinova robotic arm loaded and device found");
 	  initSuccessful = true;
 	  break;
 	case -1:
-	  Debug.LogWarning("Robot APIs troubles");
+	  Debug.LogWarning ("Robot APIs troubles");
 	  break;
 	case -2:
-	  Debug.LogWarning("Robot - no device found");
+	  Debug.LogWarning ("Robot - no device found");
 	  break;
 	case -3:
-	  Debug.LogWarning("Robot - more devices found - not sure which to use");
+	  Debug.LogWarning ("Robot - more devices found - not sure which to use");
 	  break;
 	case -10:
-	  Debug.LogWarning("Robot APIs troubles: InitAPI");
+	  Debug.LogWarning ("Robot APIs troubles: InitAPI");
 	  break;
 	case -11:
-	  Debug.LogWarning("Robot APIs troubles: CloseAPI");
+	  Debug.LogWarning ("Robot APIs troubles: CloseAPI");
 	  break;
 	case -12:
-	  Debug.LogWarning("Robot APIs troubles: SendBasicTrajectory");
+	  Debug.LogWarning ("Robot APIs troubles: SendBasicTrajectory");
 	  break;
 	case -13:
-	  Debug.LogWarning("Robot APIs troubles: GetDevices");
+	  Debug.LogWarning ("Robot APIs troubles: GetDevices");
 	  break;
 	case -14:
-	  Debug.LogWarning("Robot APIs troubles: SetActiveDevice");
+	  Debug.LogWarning ("Robot APIs troubles: SetActiveDevice");
 	  break;
 	case -15:
-	  Debug.LogWarning("Robot APIs troubles: GetAngularCommand");
+	  Debug.LogWarning ("Robot APIs troubles: GetAngularCommand");
 	  break;
 	case -16:
-	  Debug.LogWarning("Robot APIs troubles: MoveHome");
+	  Debug.LogWarning ("Robot APIs troubles: MoveHome");
 	  break;
 	case -17:
-	  Debug.LogWarning("Robot APIs troubles: InitFingers");
+	  Debug.LogWarning ("Robot APIs troubles: InitFingers");
 	  break;
 	case -123:
 	  Debug.LogWarning ("Robot APIs troubles: Command Layer Handle");
 	  break;
 	default:
-	  Debug.LogWarning("Robot - unknown error from initialization");
+	  Debug.LogWarning ("Robot - unknown error from initialization");
 	  break;
 	}
+
+//	if (initSuccessful) {
+	  Debug.Log("MoveFingers: " + MoveFingers(true, true, true, true, true));
+//	}
   }//END START() FUNCTION
 
   /**@brief Update() is called once per game frame. 
@@ -159,6 +167,15 @@ public class HandController : MonoBehaviour
    */
   void Update() {
 
+    for(int i = 0; i < 100; i++){
+	  Debug.Log("MoveFingers True & False (" + i + ")"); 
+	  MoveFingers(true, true, true, true, true);
+	  Thread.Sleep(50);
+	  MoveFingers(false, false, false, false, false);
+	  Thread.Sleep(50);
+	}
+	
+	
 	Vector3 controllerPosition = GetGlobalPosition();
 	Vector3 controllerRotation = GetLocalRotation();
 	float temp = 5.0f;

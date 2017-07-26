@@ -8,4 +8,5 @@ extern "C"
   DllExport int InitRobot();
   DllExport int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   DllExport int CloseDevice();
+  DllExport int MoveFingers(bool pinky, bool ring, bool middle, bool index, bool thumb);
 }
