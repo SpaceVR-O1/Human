@@ -47,9 +47,12 @@ public class HandController : MonoBehaviour
   static public string INDEX_EXTENDED = "00001000";
   static public string THUMB_EXTENDED = "00010000";
 
-  public float OffsetX = -0.5f;
-  public float OffsetY = -0.7f;
-  public float OffsetZ = -62.5f;
+  private bool movingToPosition = false;
+  private bool rightArm = false;
+  public bool autoUnlockingEnabled = true;
+  private float OffsetX = -0.5f;
+  private float OffsetY = -0.7f;
+  private float OffsetZ = -62.5f;
   public float NormalizationFactor = 1.0f;
   public float ArmTargetX = 0.0f;
   public float ArmTargetY = 1.0f;
@@ -58,115 +61,6 @@ public class HandController : MonoBehaviour
   public float ArmTargetThetaY = 0.0f;
   public float ArmTargetThetaZ = 0.0f;
 
-  class Position
-  {
-	public float X { get; }
-
-	public float Y { get; }
-
-	public float Z { get; }
-
-	public float ThetaX { get; }
-
-	public float ThetaY { get; }
-
-	public float ThetaZ { get; }
-
-	public Position (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
-	{
-	  // meters
-	  X = x;
-	  Y = y;
-	  Z = z;
-
-	  // radians
-	  ThetaX = thetaX;
-	  ThetaY = thetaY;
-	  ThetaZ = thetaZ; // wrist rotation
-	}
-  }
-
-  class NormalizedPosition : Position
-  {
-	private NormalizedPosition (float x, float y, float z, float thetaX, float thetaY, float thetaZ) : base (
-		x, y, z, thetaX, thetaY, thetaZ)
-	{
-	}
-
-	public static NormalizedPosition FactoryMethod (float normalizationFactor, float x, float y, float z, float thetaX,
-	                                                float thetaY, float thetaZ)
-	{
-	  return new NormalizedPosition (
-		NormalizeValue (x, normalizationFactor),
-		NormalizeValue (y, normalizationFactor),
-		NormalizeValue (z, normalizationFactor),
-		NormalizeValue (thetaX, normalizationFactor),
-		NormalizeValue (thetaY, normalizationFactor),
-		NormalizeValue (thetaZ, normalizationFactor));
-	}
-
-	private static float NormalizeValue (float value, float normalizationFactor)
-	{
-	  return value * normalizationFactor;
-	}
-  }
-
-  // Only path that is non-blocking at the moment:
-  // RaiseTheRoof <--> Home Position <--> Scooping
-  // Note that all these positions are for the left arm
-
-  // HOME (Cartesian Position for Joystick Home)
-  // note: since Joystick home positions the arm by actuator, this
-  // home position will not exactly match Joystick home
-
-  Position HomePosition =
-	new Position (0.29f, -0.26f, 0.29f, 1.5924f, -1.1792f, 0f);
-  
-  // Arm raised up
-  Position RaiseTheRoof =
-	new Position (-0.15f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
-
-  // Arm ready to scoop ice cream
-  Position Scooping =
-	new Position (-0.15f, 0.41f, 0.57f, -1.6554f, -0.6633f, 0f);
-	
-  // Arm stretched out from the shoulder
-  Position StretchOut =
-	new Position (-0.11f, -0.25f, 0.75f, 1.5956f, 0.0318f, 0f);
-
-  // Arm hanging to the side
-  Position RestingPosition =
-	new Position (0.04f, 0.67f, 0.29f, -1.57f, -0.32f, 0f);
-
-  // Arm flexing biceps
-  Position FlexBiceps =
-	new Position (-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, 0f);
-
-  // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
-  //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
-  [DllImport ("ARM_base_32", EntryPoint = "TestFunction")]
-  public static extern int TestFunction ();
-
-  [DllImport ("ARM_base_32", EntryPoint = "InitRobot")]
-  public static extern int InitRobot ();
-
-  [DllImport ("ARM_base_32", EntryPoint = "MoveHome")]
-  public static extern int MoveHome ();
-
-  [DllImport ("ARM_base_32", EntryPoint = "MoveHand")]
-  public static extern int MoveHand (float x, float y, float z, float thetaX, float thetaY, float thetaZ);
-
-  [DllImport ("ARM_base_32", EntryPoint = "MoveHandNoThetaY")]
-  public static extern int MoveHandNoThetaY (float x, float y, float z, float thetaX, float thetaZ);
-
-  [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
-  public static extern int CloseDevice ();
-
-  [DllImport ("ARM_base_32", EntryPoint = "EraseAllTrajectories")]
-  public static extern int EraseAllTrajectories ();
-
-  private bool initSuccessful = false;
-  private bool movingToPosition = false;
   private bool handOpen = true;
   //If false hand is in closed fist
   private bool armsActive = false;
@@ -216,75 +110,25 @@ public class HandController : MonoBehaviour
 
 	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
-	Debug.Log ("START");
-	if (TestFunction () == TEST_PASSED) {
-	  Debug.Log ("Kinova robotic arm DLL import is working");
-	} else {
-	  Debug.Log ("Kinova robotic arm DLL import is not working");
+	if (KinovaAPI.initSuccessful) {
+	  // Send commands to arm at most every 5 ms
+	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
+	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
 	}
 
-	int errorCode = InitRobot ();
-	switch (errorCode) {
-	case 0:
-	  Debug.Log ("Kinova robotic arm loaded and device found");
-	  initSuccessful = true;
-	  break;
-	case -1:
-	  Debug.LogWarning ("Robot APIs troubles");
-	  break;
-	case -2:
-	  Debug.LogWarning ("Robot - no device found");
-	  break;
-	case -3:
-	  Debug.LogWarning ("Robot - more devices found - not sure which to use");
-	  break;
-	case -10:
-	  Debug.LogWarning ("Robot APIs troubles: InitAPI");
-	  break;
-	case -11:
-	  Debug.LogWarning ("Robot APIs troubles: CloseAPI");
-	  break;
-	case -12:
-	  Debug.LogWarning ("Robot APIs troubles: SendBasicTrajectory");
-	  break;
-	case -13:
-	  Debug.LogWarning ("Robot APIs troubles: GetDevices");
-	  break;
-	case -14:
-	  Debug.LogWarning ("Robot APIs troubles: SetActiveDevice");
-	  break;
-	case -15:
-	  Debug.LogWarning ("Robot APIs troubles: GetAngularCommand");
-	  break;
-	case -16:
-	  Debug.LogWarning ("Robot APIs troubles: MoveHome");
-	  break;
-	case -17:
-	  Debug.LogWarning ("Robot APIs troubles: InitFingers");
-	  break;
-	case -18:
-	  Debug.LogWarning ("Robot APIs troubles: StartForceControl");
-	  break;
-	case -123:
-	  Debug.LogWarning ("Robot APIs troubles: Command Layer Handle");
-	  break;
-	default:
-	  Debug.LogWarning ("Robot - unknown error from initialization");
-	  break;
-	}
+	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
+	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
+	Debug.Log("right controller index: " + rightIndex);
+	Debug.Log("left controller index: " + leftIndex);
 
-	if (initSuccessful) {
-	    // Send commands to arm at most every 5 ms
-	    InvokeRepeating("MoveArmToControllerPosition", 0.0f, 0.05f);
-	    InvokeRepeating("UnlockArm", 0.5f, 0.5f);
-	}
+	rightArm = (int)trackedHandObj.index == rightIndex;
   }
   //END START() FUNCTION
   void UnlockArm ()
   {
-	if (!movingToPosition) {
+	if (autoUnlockingEnabled && !movingToPosition) {
 	  Debug.Log("unlocking arm");
-	  EraseAllTrajectories();
+	  KinovaAPI.StopArm(rightArm);
 	}
   }
 
@@ -346,7 +190,7 @@ public class HandController : MonoBehaviour
 //			  targetThetaY = kinovaRadY;
 //			}
 //			MoveArm (new Position (xTarget, yTarget, zTarget,
-			MoveArmNoThetaY (new Position (xTarget, yTarget, zTarget,
+			MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
 //			     kinovaRadX, targetThetaY, 0f));
 			     kinovaRadX, 1.4f, 0f));
 		  }
@@ -370,7 +214,7 @@ public class HandController : MonoBehaviour
 
 	if (controller.GetPressDown (menuButton)) {
 	  Debug.Log ("Menu pressed");
-	  MoveArm (HomePosition);
+	  MoveArm (KinovaAPI.HomePosition);
 	}
 
 	if (controller.GetPressDown (triggerButton)) {
@@ -381,23 +225,23 @@ public class HandController : MonoBehaviour
 	if (controller.GetPressDown (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
-		MoveArm (RaiseTheRoof);
+		MoveArm (KinovaAPI.RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		EraseAllTrajectories();
+		KinovaAPI.StopArm(rightArm);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
-		MoveArm (StretchOut);
+		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
 		Debug.Log ("Touchpad Left pressed");
-		MoveArm (FlexBiceps);
+		MoveArm (KinovaAPI.FlexBiceps);
 	  }
 	}
 
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
 //	  MoveArm (Scooping);
-	  MoveHome();
+	  KinovaAPI.MoveArmHome(rightArm);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -462,12 +306,14 @@ public class HandController : MonoBehaviour
   void MoveArm (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
-	  if (initSuccessful) {
-	    PauseInterruptHeartbeat ();
-		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
-		+ ")");
-		MoveHand (x, y, z, thetaX, thetaY, thetaZ);
-	  }
+	    Debug.Log("Kinova init: " + KinovaAPI.initSuccessful);
+	    if (KinovaAPI.initSuccessful) {
+		    PauseInterruptHeartbeat ();
+			string which = rightArm ? "right" : "left";
+			Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+					+ ")");
+			KinovaAPI.MoveHand (rightArm, x, y, z, thetaX, thetaY, thetaZ);
+		}
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
@@ -481,11 +327,12 @@ public class HandController : MonoBehaviour
   void MoveArmNoThetaY (float x, float y, float z, float thetaX, float thetaZ)
   {
 	try {
-	  if (initSuccessful) {
-		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
-		+ ")");
-		MoveHandNoThetaY (x, y, z, thetaX, thetaZ);
-	  }
+	    if (KinovaAPI.initSuccessful) {
+		    string which = rightArm ? "right" : "left";
+			Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
+			+ ")");
+			KinovaAPI.MoveHandNoThetaY (rightArm, x, y, z, thetaX, thetaZ);
+		}
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
@@ -493,30 +340,14 @@ public class HandController : MonoBehaviour
 	}
   }
 
-  void MoveArm (Position position)
+  void MoveArm (KinovaAPI.Position position)
   {
 	MoveArm (position.X, position.Y, position.Z, position.ThetaX, position.ThetaY, position.ThetaZ);
   }
 
-  void MoveArmNoThetaY (Position position)
+  void MoveArmNoThetaY (KinovaAPI.Position position)
   {
 	MoveArmNoThetaY (position.X, position.Y, position.Z, position.ThetaX, position.ThetaZ);
-  }
-
-  /**@brief OnApplicationQuit() is called when application closes.
-   * 
-   * section DESCRIPTION
-   * 
-   * OnApplicationQuit(): Is called on all game objects before the 
-   * application is quit. In the editor it is called when the user 
-   * stops playmode. This function is called on all game objects 
-   * before the application is quit. In the editor it is called 
-   * when the user stops playmode.
-   */
-  private void OnApplicationQuit ()
-  {
-	//Clean up memory and and UI timers used  (e.g. armTimer.Close();)
-	CloseDevice ();
   }
 
   /**@brief OnTriggerEnter() is called on collider trigger events.

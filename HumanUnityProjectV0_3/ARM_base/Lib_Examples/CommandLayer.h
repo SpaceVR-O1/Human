@@ -4,11 +4,11 @@
 #include "KinovaTypes.h"
 #include "CommunicationLayerWindows.h"
 #include <stdio.h>
+#include <Windows.h>
 
 //This defines the the location of the communication layer.(CommunicationLayerWindows.dll)
 #define COMM_LAYER_PATH L"CommunicationLayerWindows.dll"
-
-
+#define COMM_LAYER_ETHERNET_PATH L"CommunicationLayerEthernet.dll"
 
 
 // ***** E R R O R   C O D E S ******
@@ -47,6 +47,9 @@
 //Unable to load the GetActiveDevice function from the communication layer.
 #define ERROR_GET_ACTIVE_DEVICE_METHOD 2014
 
+//Unable to load the OpenRS485_Activate() function from the communication layer.
+#define ERROR_OPEN_RS485_ACTIVATE 2015
+
 //A function's parameter is not valid.
 #define ERROR_INVALID_PARAM 2100
 
@@ -63,19 +66,21 @@
 #define CARTESIAN_SIZE 6
 
 //This represents the max actuator count in our context.
-#define MAX_ACTUATORS 6
+#define MAX_ACTUATORS 7
 
 //This represents the max actuator count in our context.
 #define MAX_INVENTORY 15
 
 //This represents the size of the array returned by the function GetCodeVersion.
-#define CODE_VERSION_COUNT 37
+#define CODE_VERSION_COUNT 42
 
 //This represents the size of the array returned by the function GetAPIVersion.
 #define API_VERSION_COUNT 3
 
 //This represents the size of the array returned by the function GetPositionCurrentActuators.
 #define POSITION_CURRENT_COUNT 12
+
+#define POSITION_CURRENT_COUNT_7DOF 14
 
 //This represents the size of the array returned by the function GetSpasmFilterValues and sent to SetSpasmFilterValues.
 #define SPASM_FILTER_COUNT 1
@@ -87,11 +92,17 @@
 
 #define OPTIMAL_Z_PARAM_SIZE 16
 
+#define OPTIMAL_Z_PARAM_SIZE_7DOF 19
+
 #define GRAVITY_VECTOR_SIZE 3
 
 #define GRAVITY_PARAM_SIZE 42
 
 #define GRAVITY_PAYLOAD_SIZE 4
+
+//This represents the size of the buffer for the IP address.
+#define IP_ADDRESS_LENGTH 4
+#define MAC_ADDRESS_LENGTH 6
 
 // ***** API'S FUNCTIONAL CORE *****
 
@@ -99,9 +110,13 @@ extern "C" __declspec(dllexport) int GetDevices(KinovaDevice devices[MAX_KINOVA_
 
 extern "C" __declspec(dllexport) int SetActiveDevice(KinovaDevice device);
 
+extern "C" __declspec(dllexport) int SetActiveDeviceEthernet(KinovaDevice device, unsigned long ipAddress);
+
 extern "C" __declspec(dllexport) int RefresDevicesList();
 
 extern "C" __declspec(dllexport) int InitAPI(void);
+
+extern "C" __declspec(dllexport) int InitEthernetAPI(EthernetCommConfig & config);
 
 extern "C" __declspec(dllexport) int CloseAPI(void);
 
@@ -145,6 +160,10 @@ extern "C" __declspec(dllexport) int SendBasicTrajectory(TrajectoryPoint traject
 
 extern "C" __declspec(dllexport) int GetClientConfigurations(ClientConfigurations &config);
 
+extern "C" __declspec(dllexport) int GetAllRobotIdentity(RobotIdentity robotIdentity[MAX_KINOVA_DEVICE], int & count);
+
+extern "C" __declspec(dllexport) int GetRobotIdentity(RobotIdentity &robotIdentity);
+
 extern "C" __declspec(dllexport) int SetClientConfigurations(ClientConfigurations config);
 
 extern "C" __declspec(dllexport) int EraseAllTrajectories();
@@ -167,6 +186,18 @@ extern "C" __declspec(dllexport) int StartForceControl();
 
 extern "C" __declspec(dllexport) int StopForceControl();
 
+extern "C" __declspec(dllexport) int StartRedundantJointNullSpaceMotion();
+
+extern "C" __declspec(dllexport) int StopRedundantJointNullSpaceMotion();
+
+extern "C" __declspec(dllexport) int ActivateExtraProtectionPinchingWrist(int state);
+
+extern "C" __declspec(dllexport) int ActivateCollisionAutomaticAvoidance(int state); //not available on Jaco, Jaco Spherical 6 DOF and Mico models. 
+
+extern "C" __declspec(dllexport) int ActivateSingularityAutomaticAvoidance(int state); //not available on Jaco, Jaco Spherical 6 DOF and Mico models. 
+
+extern "C" __declspec(dllexport) int ActivateAutoNullSpaceMotionCartesian(int state); //not available on Jaco, Jaco Spherical 6 DOF and Mico models. 
+
 extern "C" __declspec(dllexport) int StartCurrentLimitation();
 
 extern "C" __declspec(dllexport) int StopCurrentLimitation();
@@ -181,6 +212,8 @@ extern "C" __declspec(dllexport) int EraseAllProtectionZones();
 
 //Internal use only
 extern "C" __declspec(dllexport) int SetSerialNumber(char Command[STRING_LENGTH], char temp[STRING_LENGTH]);
+
+extern "C" __declspec(dllexport) int SetDefaultGravityParam(float Command[GRAVITY_PARAM_SIZE]);
 
 extern "C" __declspec(dllexport) int GetControlMapping(ControlMappingCharts &Response);
 
@@ -355,9 +388,18 @@ extern "C" __declspec(dllexport) int SetTorqueStaticFrictionMax(float Command[CO
 //Internal use only
 extern "C" __declspec(dllexport) int SetTorqueErrorResend(float Command[COMMAND_SIZE]);
 
-extern "C" __declspec(dllexport) int RunGravityZEstimationSequence(ROBOT_TYPE type, double OptimalzParam[OPTIMAL_Z_PARAM_SIZE]);
+extern "C" __declspec(dllexport) int RunGravityZEstimationSequence(ROBOT_TYPE type, float OptimalzParam[OPTIMAL_Z_PARAM_SIZE]);
+
+extern "C" __declspec(dllexport) int RunGravityZEstimationSequence7DOF(ROBOT_TYPE type, float OptimalzParam[OPTIMAL_Z_PARAM_SIZE_7DOF]);
 
 extern "C" __declspec(dllexport) int GetTrajectoryTorqueMode(int&);
 
 extern "C" __declspec(dllexport) int SetTorqueInactivityType(int);
 
+//NEW ETHERNET EXPORTED FUNCTIONS
+extern "C" __declspec(dllexport) int SetEthernetConfiguration(EthernetConfiguration * config);
+
+extern "C" __declspec(dllexport) int GetEthernetConfiguration(EthernetConfiguration * config);
+
+//DO NOT USE only for Kinova
+extern "C" __declspec(dllexport) int SetLocalMACAddress(unsigned char mac[MAC_ADDRESS_LENGTH], char temp[STRING_LENGTH]);

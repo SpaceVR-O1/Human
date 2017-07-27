@@ -73,6 +73,13 @@
 
 //You are trying to call a USB function but the OpenRS485_Activate has been called. Functions are no longer available
 #define ERROR_FUNCTION_NOT_ACCESSIBLE 1021 
+
+//No response timeout reached 
+#define ERROR_COMM_TIMEOUT  1022
+
+//If the robot answered a NACK to our command
+#define ERROR_NACK_RECEIVED 9999
+
 // ***** E N D  O F  E R R O R   C O D E S ******
 
 
@@ -184,12 +191,16 @@ gains Kp, Ki and Kd must be set to zero first. */
 
 //Total size of our packet in bytes.
 #define PACKET_SIZE 64
+#define ETH_PACKET_SIZE 1464
 
 //Data's size of a single packet.
 #define PACKET_DATA_SIZE 56
+#define ETH_PACKET_DATA_SIZE 1456
+#define PACKET_MAX_DATA_SIZE 1456 //the bigest of the packet (eth or USB)
 
 //Header's size of a packet.
 #define PACKET_HEADER_SIZE 8
+#define ETH_PACKET_HEADER_SIZE 10
 
 //Version of this library.
 #define COMM_LAYER_VERSION 10002
@@ -213,7 +224,7 @@ struct Packet
 	short TotalPacketCount;
 	short IdCommand;
 	short TotalDataSize;
-	unsigned char Data[PACKET_DATA_SIZE];
+	unsigned char Data[PACKET_MAX_DATA_SIZE];
 };
 
 //That is simply a list of packet
@@ -252,10 +263,10 @@ struct RS485_Message
 
 	//Source of the message. If this is an actuator, it will be an address.
 	unsigned char SourceAddress;
-	
+
 	//Destination of the message. Use the address of the actuator.
 	unsigned char DestinationAddress;
-	
+
 	//Data of the message displayed as unsigned char, float or unsigned long.
 	union
 	{
@@ -263,15 +274,33 @@ struct RS485_Message
 		float DataFloat[4];
 		unsigned long DataLong[4];
 	};
+
+};
+
+struct EthernetCommConfig
+{
+  unsigned long localIpAddress;
+  unsigned long subnetMask;
+  unsigned long robotIpAddress;
+  unsigned short localCmdport;
+  unsigned short localBcastPort;
+  unsigned short robotPort;
+  unsigned long  rxTimeOutInMs;
 };
 
 extern "C" __declspec(dllexport) int GetDeviceCount(int &result);
 
 extern "C" __declspec(dllexport) int InitCommunication();
 
+extern "C" __declspec(dllexport) int InitCommunicationEthernet(EthernetCommConfig & config);
+
 extern "C" __declspec(dllexport) int CloseCommunication();
 
 extern "C" __declspec(dllexport) Packet SendPacket(Packet &dataOut, Packet &dataIn, int &result);
+
+extern "C" __declspec(dllexport) int SendPacketList(std::vector<Packet> & listPacket, int &result);
+
+extern "C" __declspec(dllexport) Packet BroadcastSendPacket(Packet &dataOut, std::vector<Packet> &dataIn, int &result, std::vector<unsigned long> &ipAddresses, int &count);
 
 extern "C" __declspec(dllexport) int InitDataStructures();
 
