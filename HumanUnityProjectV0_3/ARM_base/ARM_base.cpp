@@ -21,7 +21,9 @@ int(*MyGetDevices)(KinovaDevice devices[MAX_KINOVA_DEVICE], int &result);
 int(*MySetActiveDevice)(KinovaDevice device);
 int(*MyMoveHome)();
 int(*MyInitFingers)();
+int(*MyEraseAllTrajectories)();
 int(*MyGetAngularCommand)(AngularPosition &);
+int(*MyGetCartesianCommand)(CartesianPosition &);
 
 extern "C"
 {
@@ -57,7 +59,9 @@ extern "C"
 		MySendBasicTrajectory = (int(*)(TrajectoryPoint)) GetProcAddress(commandLayer_handle, "SendBasicTrajectory");
 		MyGetAngularCommand = (int(*)(AngularPosition &)) GetProcAddress(commandLayer_handle, "GetAngularCommand");
 		MyMoveHome = (int(*)()) GetProcAddress(commandLayer_handle, "MoveHome");
+		MyEraseAllTrajectories = (int(*)()) GetProcAddress(commandLayer_handle, "EraseAllTrajectories");
 		MyInitFingers = (int(*)()) GetProcAddress(commandLayer_handle, "InitFingers");
+		MyGetCartesianCommand = (int(*)(CartesianPosition &)) GetProcAddress(commandLayer_handle, "GetCartesianCommand");
 
 		//Verify that all functions has been loaded correctly
 		if (MyInitAPI == NULL)
@@ -130,8 +134,27 @@ extern "C"
 		return 0;
 	}
 
+	int MoveHome()
+	{
+		MyMoveHome();
+		return 0;
+	}
+
 	int MoveHandNoThetaY(float x, float y, float z, float thetaX, float thetaZ)
 	{
+		CartesianPosition currentCommand;
+		//get the actual angular command of the robot.
+		MyGetCartesianCommand(currentCommand);
+
+		MoveHand(x, y, z, thetaX, currentCommand.Coordinates.ThetaY, thetaZ);
+
+		return 0;
+	}
+
+	int EraseAllTrajectories()
+	{
+		MyEraseAllTrajectories();
+		return 0;
 	}
 
 	// Close device & free the library
