@@ -6,6 +6,9 @@ extern "C"
 {
   DllExport int TestFunction();
   DllExport int InitRobot();
-  DllExport int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ);
-  DllExport int CloseDevice();
+  DllExport int MoveArmHome(bool rightArm);
+  DllExport int MoveHand(bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ);
+  DllExport int MoveHandNoThetaY(bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
+  DllExport int StopArm(bool rightArm);
+  DllExport int CloseDevice(bool rightArm);
 }
