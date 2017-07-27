@@ -24,6 +24,7 @@ int(*MyInitFingers)();
 int(*MyEraseAllTrajectories)();
 int(*MyGetAngularCommand)(AngularPosition &);
 int(*MyGetCartesianCommand)(CartesianPosition &);
+int(*MyGetRobotIdentity)(RobotIdentity &);
 
 extern "C"
 {
@@ -62,6 +63,7 @@ extern "C"
 		MyEraseAllTrajectories = (int(*)()) GetProcAddress(commandLayer_handle, "EraseAllTrajectories");
 		MyInitFingers = (int(*)()) GetProcAddress(commandLayer_handle, "InitFingers");
 		MyGetCartesianCommand = (int(*)(CartesianPosition &)) GetProcAddress(commandLayer_handle, "GetCartesianCommand");
+		MyGetRobotIdentity = (int(*)(RobotIdentity &)) GetProcAddress(commandLayer_handle, "GetRobotIdentity");
 
 		//Verify that all functions has been loaded correctly
 		if (MyInitAPI == NULL)
@@ -138,6 +140,25 @@ extern "C"
 	{
 		MyMoveHome();
 		return 0;
+	}
+
+	int GetArmId()
+	{
+		RobotIdentity identity;
+		MyGetRobotIdentity(identity);
+		string leftArm = "PJ0650019161750001";
+		string rightArm = "PJ00900006020921-0";
+		string serialNumber = identity.SerialNumber;
+
+		if (serialNumber == leftArm) {
+			return 1;
+		}
+
+		if (serialNumber == rightArm) {
+			return 2;
+		}
+
+		return -1;
 	}
 
 	int MoveHandNoThetaY(float x, float y, float z, float thetaX, float thetaZ)

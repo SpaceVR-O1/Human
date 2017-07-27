@@ -166,6 +166,9 @@ public class HandController : MonoBehaviour
   [DllImport ("ARM_base_32", EntryPoint = "EraseAllTrajectories")]
   public static extern int EraseAllTrajectories ();
 
+  [DllImport ("ARM_base_32", EntryPoint = "GetArmId")]
+  public static extern int GetArmId ();
+
   private bool initSuccessful = false;
   private bool movingToPosition = false;
   private bool handOpen = true;
@@ -275,6 +278,11 @@ public class HandController : MonoBehaviour
 	}
 
 	if (initSuccessful) {
+//	  try {
+//		GetArmId ();
+//	  } catch (Exception e) {
+//	    Debug.Log("GetArmId failed with exception: " + e.Message);
+//	  }
 	  // Send commands to arm at most every 5 ms
 	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
 	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
