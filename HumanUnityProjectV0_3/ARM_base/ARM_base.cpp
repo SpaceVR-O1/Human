@@ -26,7 +26,7 @@ int(*MyGetAngularCommand)(AngularPosition &);
 int(*MyGetCartesianCommand)(CartesianPosition &);
 
 KinovaDevice list[MAX_KINOVA_DEVICE];
-char* leftArm = "PJ0650019161750001 ";
+char* leftArm = "PJ00650019161750001";
 char* rightArm = "PJ00900006020921-0 ";
 int leftArmIndex = -1;
 int rightArmIndex = -1;
