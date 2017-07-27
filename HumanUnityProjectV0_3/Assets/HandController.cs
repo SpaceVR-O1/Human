@@ -116,8 +116,8 @@ public class HandController : MonoBehaviour
 	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
 	}
 
-	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
-	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
+	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
+	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
 	Debug.Log("right controller index: " + rightIndex);
 	Debug.Log("left controller index: " + leftIndex);
 
