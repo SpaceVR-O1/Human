@@ -350,24 +350,6 @@ public class HandController : MonoBehaviour
 	MoveArmNoThetaY (position.X, position.Y, position.Z, position.ThetaX, position.ThetaZ);
   }
 
-  /**@brief OnApplicationQuit() is called when application closes.
-   * 
-   * section DESCRIPTION
-   * 
-   * OnApplicationQuit(): Is called on all game objects before the 
-   * application is quit. In the editor it is called when the user 
-   * stops playmode. This function is called on all game objects 
-   * before the application is quit. In the editor it is called 
-   * when the user stops playmode.
-   */
-  private void OnApplicationQuit ()
-  {
-	//Clean up memory and and UI timers used  (e.g. armTimer.Close();)
-	if (KinovaAPI.initSuccessful) {
-	  KinovaAPI.CloseDevice (rightArm);
-	}
-  }
-
   /**@brief OnTriggerEnter() is called on collider trigger events.
    * 
    * section DESCRIPTION

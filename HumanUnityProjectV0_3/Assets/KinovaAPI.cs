@@ -164,9 +164,22 @@ public class KinovaAPI : MonoBehaviour
 	  Debug.LogError ("Robot - unknown error from initialization");
 	  break;
 	}
+  }
 
-	if (!initSuccessful) {
-	  UnityEditor.EditorApplication.isPlaying = false;
+  /**@brief OnApplicationQuit() is called when application closes.
+   * 
+   * section DESCRIPTION
+   * 
+   * OnApplicationQuit(): Is called on all game objects before the 
+   * application is quit. In the editor it is called when the user 
+   * stops playmode. This function is called on all game objects 
+   * before the application is quit. In the editor it is called 
+   * when the user stops playmode.
+   */
+  private void OnApplicationQuit ()
+  {
+	if (initSuccessful) {
+	  CloseDevice (false);
 	}
   }
 }
