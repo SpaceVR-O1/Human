@@ -24,7 +24,12 @@ int(*MyInitFingers)();
 int(*MyEraseAllTrajectories)();
 int(*MyGetAngularCommand)(AngularPosition &);
 int(*MyGetCartesianCommand)(CartesianPosition &);
-int(*MyGetRobotIdentity)(RobotIdentity &);
+
+KinovaDevice list[MAX_KINOVA_DEVICE];
+char* leftArm = "PJ0650019161750001 ";
+char* rightArm = "PJ00900006020921-0 ";
+int leftArmIndex = -1;
+int rightArmIndex = -1;
 
 extern "C"
 {
@@ -63,8 +68,7 @@ extern "C"
 		MyEraseAllTrajectories = (int(*)()) GetProcAddress(commandLayer_handle, "EraseAllTrajectories");
 		MyInitFingers = (int(*)()) GetProcAddress(commandLayer_handle, "InitFingers");
 		MyGetCartesianCommand = (int(*)(CartesianPosition &)) GetProcAddress(commandLayer_handle, "GetCartesianCommand");
-		MyGetRobotIdentity = (int(*)(RobotIdentity &)) GetProcAddress(commandLayer_handle, "GetRobotIdentity");
-
+		
 		//Verify that all functions has been loaded correctly
 		if (MyInitAPI == NULL)
 		{
@@ -100,27 +104,41 @@ extern "C"
 		}
 
 		int result = (*MyInitAPI)();
-		KinovaDevice list[MAX_KINOVA_DEVICE];
 
 		int devicesCount = MyGetDevices(list, result);
-		if (devicesCount == 1)
+		for (int i = 0; i < devicesCount; i++)
 		{
-			// succesfull
-			MySetActiveDevice(list[0]);
-			return 0;
+			if (strcmp(leftArm, list[i].SerialNumber) == 0) {
+				leftArmIndex = i;
+			}
+			else if (strcmp(rightArm, list[i].SerialNumber) == 0) {
+				rightArmIndex = i;
+			}
 		}
-		if (devicesCount > 1)
+
+		if (devicesCount >= 1)
 		{
-			return -3;
+			return 0;
 		}
 
 		// not succesfull - no device found
 		return -2;
 	}
 
-	// send robot to new point
-	int MoveHand(float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	void EnableDesiredArm(bool rightArm)
 	{
+		if (rightArm) {
+			MySetActiveDevice(list[rightArmIndex]);
+		}
+		else {
+			MySetActiveDevice(list[leftArmIndex]);
+		}
+	}
+
+	// send robot to new point
+	int MoveHand(bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+	{
+		EnableDesiredArm(rightArm);
 		TrajectoryPoint pointToSend;
 		pointToSend.InitStruct();
 		pointToSend.Position.Type = CARTESIAN_POSITION;
@@ -136,51 +154,36 @@ extern "C"
 		return 0;
 	}
 
-	int MoveHome()
+	int MoveArmHome(bool rightArm)
 	{
+		EnableDesiredArm(rightArm);
 		MyMoveHome();
 		return 0;
 	}
 
-	int GetArmId()
+	int MoveHandNoThetaY(bool rightArm, float x, float y, float z, float thetaX, float thetaZ)
 	{
-		RobotIdentity identity;
-		MyGetRobotIdentity(identity);
-		string leftArm = "PJ0650019161750001";
-		string rightArm = "PJ00900006020921-0";
-		string serialNumber = identity.SerialNumber;
-
-		if (serialNumber == leftArm) {
-			return 1;
-		}
-
-		if (serialNumber == rightArm) {
-			return 2;
-		}
-
-		return -1;
-	}
-
-	int MoveHandNoThetaY(float x, float y, float z, float thetaX, float thetaZ)
-	{
+		EnableDesiredArm(rightArm);
 		CartesianPosition currentCommand;
 		//get the actual angular command of the robot.
 		MyGetCartesianCommand(currentCommand);
 
-		MoveHand(x, y, z, thetaX, currentCommand.Coordinates.ThetaY, thetaZ);
+		MoveHand(rightArm, x, y, z, thetaX, currentCommand.Coordinates.ThetaY, thetaZ);
 
 		return 0;
 	}
 
-	int EraseAllTrajectories()
+	int StopArm(bool rightArm)
 	{
+		EnableDesiredArm(rightArm);
 		MyEraseAllTrajectories();
 		return 0;
 	}
 
 	// Close device & free the library
-	int CloseDevice()
+	int CloseDevice(bool rightArm)
 	{
+		EnableDesiredArm(rightArm);
 		(*MyCloseAPI)();
 		FreeLibrary(commandLayer_handle);
 

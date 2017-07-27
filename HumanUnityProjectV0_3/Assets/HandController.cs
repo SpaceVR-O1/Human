@@ -47,6 +47,7 @@ public class HandController : MonoBehaviour
   static public string INDEX_EXTENDED = "00001000";
   static public string THUMB_EXTENDED = "00010000";
 
+  private bool rightArm = false;
   public bool autoUnlockingEnabled = true;
   private float OffsetX = -0.5f;
   private float OffsetY = -0.7f;
@@ -151,23 +152,20 @@ public class HandController : MonoBehaviour
   [DllImport ("ARM_base_32", EntryPoint = "InitRobot")]
   public static extern int InitRobot ();
 
-  [DllImport ("ARM_base_32", EntryPoint = "MoveHome")]
-  public static extern int MoveHome ();
+  [DllImport ("ARM_base_32", EntryPoint = "MoveArmHome")]
+  public static extern int MoveArmHome (bool rightArm);
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveHand")]
-  public static extern int MoveHand (float x, float y, float z, float thetaX, float thetaY, float thetaZ);
+  public static extern int MoveHand (bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ);
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveHandNoThetaY")]
-  public static extern int MoveHandNoThetaY (float x, float y, float z, float thetaX, float thetaZ);
+  public static extern int MoveHandNoThetaY (bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
 
   [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
-  public static extern int CloseDevice ();
+  public static extern int CloseDevice (bool rightArm);
 
-  [DllImport ("ARM_base_32", EntryPoint = "EraseAllTrajectories")]
-  public static extern int EraseAllTrajectories ();
-
-  [DllImport ("ARM_base_32", EntryPoint = "GetArmId")]
-  public static extern int GetArmId ();
+  [DllImport ("ARM_base_32", EntryPoint = "StopArm")]
+  public static extern int StopArm (bool rightArm);
 
   private bool initSuccessful = false;
   private bool movingToPosition = false;
@@ -278,22 +276,24 @@ public class HandController : MonoBehaviour
 	}
 
 	if (initSuccessful) {
-//	  try {
-//		GetArmId ();
-//	  } catch (Exception e) {
-//	    Debug.Log("GetArmId failed with exception: " + e.Message);
-//	  }
 	  // Send commands to arm at most every 5 ms
 	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
 	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
 	}
+
+	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
+	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
+	Debug.Log("right controller index: " + rightIndex);
+	Debug.Log("left controller index: " + leftIndex);
+
+	rightArm = (int)trackedHandObj.index == rightIndex;
   }
   //END START() FUNCTION
   void UnlockArm ()
   {
 	if (autoUnlockingEnabled && !movingToPosition) {
 	  Debug.Log("unlocking arm");
-	  EraseAllTrajectories();
+	  StopArm(rightArm);
 	}
   }
 
@@ -393,7 +393,7 @@ public class HandController : MonoBehaviour
 		MoveArm (RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		EraseAllTrajectories();
+		StopArm(rightArm);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
 		MoveArm (StretchOut);
@@ -406,7 +406,7 @@ public class HandController : MonoBehaviour
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
 //	  MoveArm (Scooping);
-	  MoveHome();
+	  MoveArmHome(rightArm);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -473,9 +473,10 @@ public class HandController : MonoBehaviour
 	try {
 	  if (initSuccessful) {
 	    PauseInterruptHeartbeat ();
-		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+		string which = rightArm ? "right" : "left";
+		Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
 		+ ")");
-		MoveHand (x, y, z, thetaX, thetaY, thetaZ);
+		MoveHand (rightArm, x, y, z, thetaX, thetaY, thetaZ);
 	  }
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
@@ -491,9 +492,10 @@ public class HandController : MonoBehaviour
   {
 	try {
 	  if (initSuccessful) {
-		Debug.Log ("Moving robot arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
+	    string which = rightArm ? "right" : "left";
+		Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
 		+ ")");
-		MoveHandNoThetaY (x, y, z, thetaX, thetaZ);
+		MoveHandNoThetaY (rightArm, x, y, z, thetaX, thetaZ);
 	  }
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
@@ -525,7 +527,7 @@ public class HandController : MonoBehaviour
   private void OnApplicationQuit ()
   {
 	//Clean up memory and and UI timers used  (e.g. armTimer.Close();)
-	CloseDevice ();
+	CloseDevice (rightArm);
   }
 
   /**@brief OnTriggerEnter() is called on collider trigger events.
