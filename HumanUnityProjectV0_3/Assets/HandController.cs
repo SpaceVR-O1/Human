@@ -48,9 +48,9 @@ public class HandController : MonoBehaviour
   static public string THUMB_EXTENDED = "00010000";
 
   public bool autoUnlockingEnabled = true;
-  public float OffsetX = -0.5f;
-  public float OffsetY = -0.7f;
-  public float OffsetZ = -62.5f;
+  private float OffsetX = -0.5f;
+  private float OffsetY = -0.7f;
+  private float OffsetZ = -62.5f;
   public float NormalizationFactor = 1.0f;
   public float ArmTargetX = 0.0f;
   public float ArmTargetY = 1.0f;
