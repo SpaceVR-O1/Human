@@ -47,6 +47,7 @@ public class HandController : MonoBehaviour
   static public string INDEX_EXTENDED = "00001000";
   static public string THUMB_EXTENDED = "00010000";
 
+  public bool autoUnlockingEnabled = true;
   public float OffsetX = -0.5f;
   public float OffsetY = -0.7f;
   public float OffsetZ = -62.5f;
@@ -274,15 +275,15 @@ public class HandController : MonoBehaviour
 	}
 
 	if (initSuccessful) {
-	    // Send commands to arm at most every 5 ms
-	    InvokeRepeating("MoveArmToControllerPosition", 0.0f, 0.05f);
-	    InvokeRepeating("UnlockArm", 0.5f, 0.5f);
+	  // Send commands to arm at most every 5 ms
+	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
+	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
 	}
   }
   //END START() FUNCTION
   void UnlockArm ()
   {
-	if (!movingToPosition) {
+	if (autoUnlockingEnabled && !movingToPosition) {
 	  Debug.Log("unlocking arm");
 	  EraseAllTrajectories();
 	}

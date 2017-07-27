@@ -130,6 +130,10 @@ extern "C"
 		return 0;
 	}
 
+	int MoveHandNoThetaY(float x, float y, float z, float thetaX, float thetaZ)
+	{
+	}
+
 	// Close device & free the library
 	int CloseDevice()
 	{
