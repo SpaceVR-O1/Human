@@ -167,6 +167,9 @@ public class HandController : MonoBehaviour
 	  if (eulerX < 0) { // turning right/down
 		kinovaRadX = radX;
 	  }
+	  if (rightArm) { // mirror X rotation
+	    kinovaRadX = (kinovaRadX * -1) + 3;
+	  }
 	  float thetaYMin = -0.8f;
 	  float thetaYMax = 1.4f;
 
@@ -184,14 +187,7 @@ public class HandController : MonoBehaviour
 		  Debug.Log ("Arm Target Z: " + zTarget);
 		  if (zTarget > zMin && zTarget < zMax) {
 			Debug.Log ("Arm Target Z within valid range!");
-			float targetThetaY = -1.1792f;
-//			if (kinovaRadY > thetaYMin && kinovaRadY < thetaYMax) {
-//			  Debug.Log ("Theta Y within valid range!");
-//			  targetThetaY = kinovaRadY;
-//			}
-//			MoveArm (new Position (xTarget, yTarget, zTarget,
 			MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
-//			     kinovaRadX, targetThetaY, 0f));
 			     kinovaRadX, 1.4f, 0f));
 		  }
 		}
@@ -310,9 +306,10 @@ public class HandController : MonoBehaviour
 	    if (KinovaAPI.initSuccessful) {
 		    PauseInterruptHeartbeat ();
 			string which = rightArm ? "right" : "left";
-			Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+			float actualX = rightArm ? x * -1 : x;
+			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
 					+ ")");
-			KinovaAPI.MoveHand (rightArm, x, y, z, thetaX, thetaY, thetaZ);
+			KinovaAPI.MoveHand (rightArm, actualX, y, z, thetaX, thetaY, thetaZ);
 		}
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
@@ -329,9 +326,10 @@ public class HandController : MonoBehaviour
 	try {
 	    if (KinovaAPI.initSuccessful) {
 		    string which = rightArm ? "right" : "left";
-			Debug.Log ("Moving " + which + " arm to (" + x + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
-			+ ")");
-			KinovaAPI.MoveHandNoThetaY (rightArm, x, y, z, thetaX, thetaZ);
+			float actualX = rightArm ? x * -1 : x;
+			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
+					+ ")");
+			KinovaAPI.MoveHandNoThetaY (rightArm, actualX, y, z, thetaX, thetaZ);
 		}
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
