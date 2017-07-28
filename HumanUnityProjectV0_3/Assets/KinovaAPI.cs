@@ -83,7 +83,8 @@ public class KinovaAPI : MonoBehaviour
 
   // Only path that is non-blocking at the moment:
   // RaiseTheRoof <--> Home Position <--> Scooping
-  // Note that all these positions are for the left arm
+  // Note that all these positions are for the left arm; for right
+  // arm positions, negate x and compliment thetaX.
 
   // HOME (Cartesian Position for Joystick Home)
   // note: since Joystick home positions the arm by actuator, this
