@@ -56,31 +56,6 @@ public class KinovaAPI : MonoBehaviour
 	}
   }
 
-  public class NormalizedPosition : Position
-  {
-	private NormalizedPosition (float x, float y, float z, float thetaX, float thetaY, float thetaZ) : base (
-		x, y, z, thetaX, thetaY, thetaZ)
-	{
-	}
-
-	public static NormalizedPosition FactoryMethod (float normalizationFactor, float x, float y, float z, float thetaX,
-	                                                 float thetaY, float thetaZ)
-	{
-	  return new NormalizedPosition (
-		NormalizeValue (x, normalizationFactor),
-		NormalizeValue (y, normalizationFactor),
-		NormalizeValue (z, normalizationFactor),
-		NormalizeValue (thetaX, normalizationFactor),
-		NormalizeValue (thetaY, normalizationFactor),
-		NormalizeValue (thetaZ, normalizationFactor));
-	}
-
-	private static float NormalizeValue (float value, float normalizationFactor)
-	{
-	  return value * normalizationFactor;
-	}
-  }
-
   // Only path that is non-blocking at the moment:
   // RaiseTheRoof <--> Home Position <--> Scooping
   // Note that all these positions are for the left arm; for right

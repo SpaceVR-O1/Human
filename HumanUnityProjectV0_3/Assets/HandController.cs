@@ -50,16 +50,15 @@ public class HandController : MonoBehaviour
   private bool movingToPosition = false;
   private bool rightArm = false;
   public bool autoUnlockingEnabled = true;
-  private float OffsetX = -0.5f;
-  private float OffsetY = -0.7f;
-  private float OffsetZ = -62.5f;
-  public float NormalizationFactor = 1.0f;
-  public float ArmTargetX = 0.0f;
-  public float ArmTargetY = 1.0f;
-  public float ArmTargetZ = 0.0f;
-  public float ArmTargetThetaX = 0.0f;
-  public float ArmTargetThetaY = 0.0f;
-  public float ArmTargetThetaZ = 0.0f;
+  public float OffsetX = 0.0f;
+  public float OffsetY = -1.0f;
+  public float OffsetZ = 0.5f;
+  public float xMin = 0.1f;
+  public float xMax = 1.0f;
+  public float yMin = -1.0f;
+  public float yMax = 0.8f;
+  public float zMin = -0.15f;
+  public float zMax = 0.8f;
 
   private bool handOpen = true;
   //If false hand is in closed fist
@@ -139,15 +138,13 @@ public class HandController : MonoBehaviour
 
 	if (controller.GetPress (triggerButton)) {
 	  float pi = (float)Math.PI;
-	  float xMin = 0.1f;
-	  float xMax = 0.6f;
 	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
-	  float yMin = -0.6f;
-	  float yMax = 0.5f;
 	  float yTarget = (controllerPosition.y + OffsetY) * -1;
-	  float zMin = 0.05f;
-	  float zMax = 0.8f;
 	  float zTarget = (controllerPosition.x + OffsetX);
+
+	  if (rightArm) {
+		zTarget *= -1;
+	  }
 
 	  float eulerY = transform.rotation.eulerAngles.y;
 	  float radY = eulerY * pi / 180f;
@@ -173,12 +170,6 @@ public class HandController : MonoBehaviour
 	  float thetaYMin = -0.8f;
 	  float thetaYMax = 1.4f;
 
-	  Debug.Log ("eulerX: " + eulerX);
-	  Debug.Log ("radX: " + radX);
-	  Debug.Log ("kinovaRadX: " + kinovaRadX);
-	  Debug.Log ("eulerY: " + eulerY);
-	  Debug.Log ("radY: " + radY);
-	  Debug.Log ("kinovaRadY: " + kinovaRadY);
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
 		Debug.Log ("Arm Target X: " + xTarget);
