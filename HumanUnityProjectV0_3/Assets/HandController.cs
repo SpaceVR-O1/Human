@@ -218,10 +218,14 @@ public class HandController : MonoBehaviour
 		KinovaAPI.StopArm(rightArm);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
-		MoveArm (KinovaAPI.StretchOut);
+		Debug.Log ("Fingers moved to: " +
+			KinovaAPI.MoveFingers(rightArm, true, true, true, true, true));
+//		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
 		Debug.Log ("Touchpad Left pressed");
-		MoveArm (KinovaAPI.FlexBiceps);
+		Debug.Log ("Fingers moved to: " +
+		    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false));
+//		MoveArm (KinovaAPI.FlexBiceps);
 	  }
 	}
 

@@ -9,6 +9,7 @@ extern "C"
   DllExport int MoveArmHome(bool rightArm);
   DllExport int MoveHand(bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ);
   DllExport int MoveHandNoThetaY(bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
+  DllExport int MoveFingers(bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb);
   DllExport int StopArm(bool rightArm);
   DllExport int CloseDevice(bool rightArm);
 }

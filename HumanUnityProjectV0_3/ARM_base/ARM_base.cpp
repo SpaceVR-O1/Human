@@ -173,6 +173,46 @@ extern "C"
 		return 0;
 	}
 
+	/**
+	* @param pinky is extended if TRUE and close otherwise
+	* @param ring is extended if TRUE and close otherwise
+	* @param middle is extended if TRUE and close otherwise
+	* @param index is extended if TRUE and close otherwise
+	* @param thumb is extended if TRUE and close otherwise
+	*/
+	int MoveFingers(bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb) {
+		EnableDesiredArm(rightArm);
+		CartesianPosition currentCommand;
+		//get the actual angular command of the robot.
+		MyGetCartesianCommand(currentCommand);
+
+		TrajectoryPoint pointToSend;
+		pointToSend.InitStruct(); // initializes all values to 0.0
+		pointToSend.Position.CartesianPosition.X = currentCommand.Coordinates.X;
+		pointToSend.Position.CartesianPosition.Y = currentCommand.Coordinates.Y;
+		pointToSend.Position.CartesianPosition.Z = currentCommand.Coordinates.Z;
+		pointToSend.Position.CartesianPosition.ThetaX = currentCommand.Coordinates.ThetaX;
+		pointToSend.Position.CartesianPosition.ThetaY = currentCommand.Coordinates.ThetaY;
+		pointToSend.Position.CartesianPosition.ThetaZ = currentCommand.Coordinates.ThetaZ;
+
+		float fingerValue = 0.0f;
+
+		if (pinky && ring && middle && index && thumb) {
+			//OPEN HAND CF_OpenHandOneFingers = 31, CF_OpenHandTwoFingers = 33,
+			//0.0 to 10.0 are the possible finger opening steps See KinovaTypes.h line 560 (struct FingersPosition)
+			fingerValue = 10.0f;
+		}
+
+		pointToSend.Position.Fingers.Finger1 = fingerValue;
+		pointToSend.Position.Fingers.Finger2 = fingerValue;
+		pointToSend.Position.Fingers.Finger3 = fingerValue;
+
+		MySendBasicTrajectory(pointToSend);
+
+		return fingerValue;
+
+	}//END MOVEFINGER FUNCTION
+
 	int StopArm(bool rightArm)
 	{
 		EnableDesiredArm(rightArm);

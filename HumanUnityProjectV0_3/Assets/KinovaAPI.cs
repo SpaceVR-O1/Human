@@ -20,6 +20,9 @@ public class KinovaAPI : MonoBehaviour
   [DllImport ("ARM_base_32", EntryPoint = "MoveHandNoThetaY")]
   public static extern int MoveHandNoThetaY (bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
 
+  [DllImport ("ARM_base_32", EntryPoint = "MoveFingers")]
+  public static extern int MoveFingers (bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb);
+
   [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
   public static extern int CloseDevice (bool rightArm);
 
