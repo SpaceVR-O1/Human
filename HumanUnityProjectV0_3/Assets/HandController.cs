@@ -209,7 +209,7 @@ public class HandController : MonoBehaviour
 //	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 	}
 
-	if (controller.GetPressDown (touchpad)) {
+	if (controller.GetPress (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
 		MoveArm (KinovaAPI.RaiseTheRoof);
@@ -217,12 +217,14 @@ public class HandController : MonoBehaviour
 		Debug.Log ("Touchpad Down pressed");
 		KinovaAPI.StopArm(rightArm);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
-		Debug.Log ("Touchpad Right pressed");
+		Debug.Log ("Touchpad Right pressed down");
+		PauseInterruptHeartbeat ();
 		Debug.Log ("Fingers moved to: " +
 			KinovaAPI.MoveFingers(rightArm, true, true, true, true, true));
 //		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
-		Debug.Log ("Touchpad Left pressed");
+		Debug.Log ("Touchpad Left pressed down");
+		PauseInterruptHeartbeat ();
 		Debug.Log ("Fingers moved to: " +
 		    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false));
 //		MoveArm (KinovaAPI.FlexBiceps);
