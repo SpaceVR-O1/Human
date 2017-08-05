@@ -73,7 +73,7 @@ public class KinovaAPI : MonoBehaviour
 
   // Arm raised up
   public static Position RaiseTheRoof =
-	new Position (-0.15f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
+	new Position (0.0f, -0.60f, 0.33f, 1.5665f, -0.4711f, 0f);
 
   // Arm ready to scoop ice cream
   public static Position Scooping =
