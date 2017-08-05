@@ -53,12 +53,12 @@ public class HandController : MonoBehaviour
   public float OffsetX = 0.0f;
   public float OffsetY = -1.0f;
   public float OffsetZ = 0.5f;
-  public float xMin = 0.1f;
-  public float xMax = 1.0f;
-  public float yMin = -1.0f;
-  public float yMax = 0.8f;
-  public float zMin = -0.15f;
-  public float zMax = 0.8f;
+  public float xMin = -1.0f;
+  public float xMax = 2.5f;
+  public float yMin = -1.5f;
+  public float yMax = 1.8f;
+  public float zMin = -1.15f;
+  public float zMax = 1.8f;
 
   private bool handOpen = true;
   //If false hand is in closed fist
