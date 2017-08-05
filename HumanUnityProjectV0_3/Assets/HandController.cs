@@ -51,14 +51,14 @@ public class HandController : MonoBehaviour
   private bool rightArm = false;
   public bool autoUnlockingEnabled = true;
   public float OffsetX = 0.0f;
-  public float OffsetY = -1.0f;
-  public float OffsetZ = 0.5f;
-  public float xMin = -1.0f;
-  public float xMax = 2.5f;
-  public float yMin = -1.5f;
-  public float yMax = 1.8f;
-  public float zMin = -1.15f;
-  public float zMax = 1.8f;
+  public float OffsetY = 0.0f;
+  public float OffsetZ = 0.0f;
+  public float xMin = -0.1f;
+  public float xMax = 1.5f;
+  public float yMin = -1.0f;
+  public float yMax = 0.8f;
+  public float zMin = -0.5f;
+  public float zMax = 2.0f;
 
   private bool handOpen = true;
   //If false hand is in closed fist
@@ -126,7 +126,6 @@ public class HandController : MonoBehaviour
   void UnlockArm ()
   {
 	if (autoUnlockingEnabled && !movingToPosition) {
-	  Debug.Log("unlocking arm");
 	  KinovaAPI.StopArm(rightArm);
 	}
   }
@@ -170,12 +169,16 @@ public class HandController : MonoBehaviour
 	  float thetaYMin = -0.8f;
 	  float thetaYMax = 1.4f;
 
+	  Debug.Log ("Arm Target Y: " + yTarget);
+	  Debug.Log ("Y valid range is [" + yMin + "," + yMax + "]" );
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
 		Debug.Log ("Arm Target X: " + xTarget);
+		Debug.Log ("X valid range is [" + xMin + "," + xMax + "]" );
 		if (xTarget > xMin && xTarget < xMax) {
 		  Debug.Log ("Arm Target X within valid range!");
 		  Debug.Log ("Arm Target Z: " + zTarget);
+		  Debug.Log ("Z valid range is [" + zMin + "," + zMax + "]" );
 		  if (zTarget > zMin && zTarget < zMax) {
 			Debug.Log ("Arm Target Z within valid range!");
 			MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
