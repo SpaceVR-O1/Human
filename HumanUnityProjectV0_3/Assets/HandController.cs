@@ -163,6 +163,7 @@ public class HandController : MonoBehaviour
 	  if (eulerX < 0) { // turning right/down
 		kinovaRadX = radX;
 	  }
+	  kinovaRadX -= 1.5f; // shift rotation to match hand instead of wrist
 	  if (rightArm) { // mirror X rotation
 	    kinovaRadX = (kinovaRadX * -1) + 3;
 	  }
