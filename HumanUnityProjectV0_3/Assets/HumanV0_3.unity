@@ -108,6 +108,39 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!21 &361153052
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &565016736 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 124034, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
@@ -124,15 +157,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoUnlockingEnabled: 1
-  OffsetX: 0
-  OffsetY: -1
-  OffsetZ: 0.5
-  xMin: 0.1
-  xMax: 1
+  OffsetX: -0.9
+  OffsetY: 0
+  OffsetZ: 0
+  xMin: -0.1
+  xMax: 1.5
   yMin: -1
   yMax: 0.8
-  zMin: -0.15
-  zMax: 0.8
+  zMin: -0.5
+  zMax: 2
 --- !u!1 &662100222
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,15 +222,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoUnlockingEnabled: 1
-  OffsetX: 0
-  OffsetY: -1
-  OffsetZ: 0.5
-  xMin: 0.1
-  xMax: 1
+  OffsetX: -0.9
+  OffsetY: 0
+  OffsetZ: 0
+  xMin: -0.1
+  xMax: 1.5
   yMin: -1
   yMax: 0.8
-  zMin: -0.15
-  zMax: 0.8
+  zMin: -0.5
+  zMax: 2
 --- !u!1001 &823733602
 Prefab:
   m_ObjectHideFlags: 0
@@ -240,11 +273,11 @@ Prefab:
     - target: {fileID: 3380982, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1434814371}
+      objectReference: {fileID: 1358961067}
     - target: {fileID: 2348914, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 953891431}
+      objectReference: {fileID: 361153052}
     - target: {fileID: 11489174, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
       propertyPath: size
       value: 0
@@ -329,39 +362,6 @@ Prefab:
     - {fileID: 11420968, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
   m_IsPrefabParent: 0
---- !u!21 &953891431
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1205382832
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +424,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &1434814371
+--- !u!43 &1358961067
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -440,7 +440,7 @@ Mesh:
     vertexCount: 8
     localAABB:
       m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.5499998, y: 0, z: 0.95000017}
+      m_Extent: {x: 1.4499997, y: 0, z: 1.15}
   m_Shapes:
     vertices: []
     shapes: []
@@ -492,7 +492,7 @@ Mesh:
       format: 0
       dimension: 0
     m_DataSize: 288
-    _typelessdata: 3233b33f0ad7233ccfcc4cbf000000000000803f0000803f0000803f00000000000000003233b3bf0ad7233ccfcc4cbf000000000000803f0000803f0000803f0000803f000000003233b3bf0ad7233ccfcc4c3f000000000000803f0000803f0000803f00000000000000003233b33f0ad7233ccfcc4c3f000000000000803f0000803f0000803f0000803f000000006566c63f0ad7233c363373bf000000000000803f0000803f00000000000000000000803f6566c6bf0ad7233c363373bf000000000000803f0000803f000000000000803f0000803f6566c6bf0ad7233c3633733f000000000000803f0000803f00000000000000000000803f6566c63f0ad7233c3633733f000000000000803f0000803f000000000000803f0000803f
+    _typelessdata: 6466a63f0ad7233cffff7fbf000000000000803f0000803f0000803f00000000000000006466a6bf0ad7233cffff7fbf000000000000803f0000803f0000803f0000803f000000006466a6bf0ad7233cffff7f3f000000000000803f0000803f0000803f00000000000000006466a63f0ad7233cffff7f3f000000000000803f0000803f0000803f0000803f000000009799b93f0ad7233c333393bf000000000000803f0000803f00000000000000000000803f9799b9bf0ad7233c333393bf000000000000803f0000803f000000000000803f0000803f9799b9bf0ad7233c3333933f000000000000803f0000803f00000000000000000000803f9799b93f0ad7233c3333933f000000000000803f0000803f000000000000803f0000803f
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -547,7 +547,7 @@ Mesh:
     m_UVInfo: 0
   m_LocalAABB:
     m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.5499998, y: 0, z: 0.95000017}
+    m_Extent: {x: 1.4499997, y: 0, z: 1.15}
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
