@@ -33,10 +33,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 
-public class HandController : MonoBehaviour
+public class HandController : NetworkBehaviour
 {
   static public bool LOCAL_DEBUG_STATEMENTS_ON = false;
   static public string OPEN_HAND = "00000000";
@@ -106,23 +107,32 @@ public class HandController : MonoBehaviour
    */
   void Start ()
   {
+	if (isServer || RunningLocally()) {
+	  KinovaAPI.InitRobot ();
+	}
+	if (isClient || RunningLocally()) {
+	  trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
-	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
-
-	if (KinovaAPI.initSuccessful) {
 	  // Send commands to arm at most every 5 ms
 	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
 	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
+
+	  int leftIndex = SteamVR_Controller.GetDeviceIndex (SteamVR_Controller.DeviceRelation.Rightmost);
+	  int rightIndex = SteamVR_Controller.GetDeviceIndex (SteamVR_Controller.DeviceRelation.Leftmost);
+	  Debug.Log ("right controller index: " + rightIndex);
+	  Debug.Log ("left controller index: " + leftIndex);
+
+	  rightArm = (int)trackedHandObj.index == rightIndex;
 	}
 
-	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
-	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
-	Debug.Log("right controller index: " + rightIndex);
-	Debug.Log("left controller index: " + leftIndex);
-
-	rightArm = (int)trackedHandObj.index == rightIndex;
   }
   //END START() FUNCTION
+
+  bool RunningLocally ()
+  {
+	return !isServer && !isClient;
+  }
+
   void UnlockArm ()
   {
 	if (autoUnlockingEnabled && !movingToPosition) {
@@ -200,13 +210,13 @@ public class HandController : MonoBehaviour
 		KinovaAPI.StopArm(rightArm);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
-		Debug.Log ("Fingers moved to: " +
-			KinovaAPI.MoveFingers(rightArm, true, true, true, true, true));
+		Debug.Log ("Fingers moved to: closed");
+		KinovaAPI.MoveFingers(rightArm, true, true, true, true, true);
 //		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
 		Debug.Log ("Touchpad Left pressed");
-		Debug.Log ("Fingers moved to: " +
-		    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false));
+		Debug.Log ("Fingers moved to: open");
+	    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false);
 //		MoveArm (KinovaAPI.FlexBiceps);
 	  }
 	}
@@ -303,15 +313,12 @@ public class HandController : MonoBehaviour
   void MoveArm (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
-	    Debug.Log("Kinova init: " + KinovaAPI.initSuccessful);
-	    if (KinovaAPI.initSuccessful) {
-		    PauseInterruptHeartbeat ();
-			string which = rightArm ? "right" : "left";
-			float actualX = rightArm ? x * -1 : x;
-			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
-					+ ")");
-			KinovaAPI.MoveHand (rightArm, actualX, y, z, thetaX, thetaY, thetaZ);
-		}
+	    PauseInterruptHeartbeat ();
+		string which = rightArm ? "right" : "left";
+		float actualX = rightArm ? x * -1 : x;
+		Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
+				+ ")");
+		KinovaAPI.MoveHand (rightArm, actualX, y, z, thetaX, thetaY, thetaZ);
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
@@ -325,13 +332,11 @@ public class HandController : MonoBehaviour
   void MoveArmNoThetaY (float x, float y, float z, float thetaX, float thetaZ)
   {
 	try {
-	    if (KinovaAPI.initSuccessful) {
-		    string which = rightArm ? "right" : "left";
-			float actualX = rightArm ? x * -1 : x;
-			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
-					+ ")");
-			KinovaAPI.MoveHandNoThetaY (rightArm, actualX, y, z, thetaX, thetaZ);
-		}
+	    string which = rightArm ? "right" : "left";
+		float actualX = rightArm ? x * -1 : x;
+		Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
+				+ ")");
+		KinovaAPI.MoveHandNoThetaY (rightArm, actualX, y, z, thetaX, thetaZ);
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
