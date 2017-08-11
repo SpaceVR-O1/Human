@@ -93,6 +93,7 @@ public class KinovaAPI : MonoBehaviour
 
   public static void InitRobot ()
   {
+    Debug.Log ("trying to init robot...");
 	if (initSuccessful) {
 	  Debug.Log ("Already initialized");
 	  return;
