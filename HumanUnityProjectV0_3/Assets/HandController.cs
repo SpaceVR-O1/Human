@@ -61,6 +61,9 @@ public class HandController : MonoBehaviour
   public float zMin = -0.5f;
   public float zMax = 2.0f;
 
+  public float moveFrequency = 0.05f; // seconds
+  public float unlockFrequency = 0.5f; // seconds
+
   private bool handOpen = true;
   //If false hand is in closed fist
   private bool armsActive = false;
@@ -96,9 +99,6 @@ public class HandController : MonoBehaviour
   private GameObject pickup;
   //Used by Unity3D collider and rigid body components to allow user interaction
 
-  //Networking
-  bool isServer = false;
-  bool isClient = false;
   public MyNetworkManager myNetworkManager;
 
   /**@brief Used for initialization of this class
@@ -112,12 +112,6 @@ public class HandController : MonoBehaviour
    */
   void Start ()
   {
-	if (isServer || RunningLocally()) {
-//	  KinovaAPI.InitRobot ();
-	}
-	if (isClient || RunningLocally()) {
-//	  InitController ();
-	}
 
   } //END START() FUNCTION
 
@@ -131,8 +125,8 @@ public class HandController : MonoBehaviour
 	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
 	// Send commands to arm at most every 5 ms
-	InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
-	InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
+	InvokeRepeating ("MoveArmToControllerPosition", 0.0f, moveFrequency);
+	InvokeRepeating ("UnlockArm", unlockFrequency, unlockFrequency);
   }
 
   void MoveArmToControllerPosition ()
@@ -202,16 +196,16 @@ public class HandController : MonoBehaviour
 		MoveArm (KinovaAPI.RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		KinovaAPI.StopArm(rightArm);
+		myNetworkManager.SendStopArm(rightArm, false);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
 		Debug.Log ("Fingers moved to: closed");
-		KinovaAPI.MoveFingers(rightArm, true, true, true, true, true);
+		myNetworkManager.SendMoveFingers(rightArm, true, true, true, true, true);
 //		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
 		Debug.Log ("Touchpad Left pressed");
 		Debug.Log ("Fingers moved to: open");
-	    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false);
+		myNetworkManager.SendMoveFingers(rightArm, false, false, false, false, false);
 //		MoveArm (KinovaAPI.FlexBiceps);
 	  }
 	}
@@ -229,7 +223,7 @@ public class HandController : MonoBehaviour
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
 //	  MoveArm (Scooping);
-	  KinovaAPI.MoveArmHome(rightArm);
+	  myNetworkManager.SendMoveArmHome(rightArm);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -269,15 +263,10 @@ public class HandController : MonoBehaviour
 
   }//END MoveArmToControllerPosition() FUNCTION
 
-  bool RunningLocally ()
-  {
-	return !isServer && !isClient;
-  }
-
   void UnlockArm ()
   {
 	if (autoUnlockingEnabled && !movingToPosition) {
-	  KinovaAPI.StopArm(rightArm);
+	  myNetworkManager.SendStopArm (rightArm, true);
 	}
   }
 
