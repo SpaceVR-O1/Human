@@ -9,27 +9,27 @@ public class KinovaAPI : MonoBehaviour
   // TODO: Give external functions prefix to easily identify them as such (e.g., extern_InitRobot)
   //https://stackoverflow.com/questions/7276389/confused-over-dll-entry-points-entry-point-not-found-exception
   [DllImport ("ARM_base_32", EntryPoint = "InitRobot")]
-  public static extern int InitRobot ();
+  private static extern int _InitRobot ();
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveArmHome")]
-  public static extern int MoveArmHome (bool rightArm);
+  private static extern int _MoveArmHome (bool rightArm);
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveHand")]
-  public static extern int MoveHand (bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ);
+  private static extern int _MoveHand (bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ);
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveHandNoThetaY")]
-  public static extern int MoveHandNoThetaY (bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
+  private static extern int _MoveHandNoThetaY (bool rightArm, float x, float y, float z, float thetaX, float thetaZ);
 
   [DllImport ("ARM_base_32", EntryPoint = "MoveFingers")]
-  public static extern int MoveFingers (bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb);
+  private static extern int _MoveFingers (bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb);
 
   [DllImport ("ARM_base_32", EntryPoint = "CloseDevice")]
-  public static extern int CloseDevice (bool rightArm);
+  private static extern int _CloseDevice (bool rightArm);
 
   [DllImport ("ARM_base_32", EntryPoint = "StopArm")]
-  public static extern int StopArm (bool rightArm);
+  private static extern int _StopArm (bool rightArm);
 
-  public static bool initSuccessful = false;
+  private static bool initSuccessful = false;
 
   public class Position
   {
@@ -91,10 +91,14 @@ public class KinovaAPI : MonoBehaviour
   public static Position FlexBiceps =
 	new Position (-0.08f, -0.46f, 0.22f, 1.37f, -0.26f, 0f);
 
-  // Use this for initialization
-  void Start ()
+  public static void InitRobot ()
   {
-	int errorCode = InitRobot ();
+    Debug.Log ("trying to init robot...");
+	if (initSuccessful) {
+	  Debug.Log ("Already initialized");
+	  return;
+	}
+	int errorCode = _InitRobot ();
 	switch (errorCode) {
 	case 0:
 	  Debug.Log ("Kinova robotic arm loaded and device found");
@@ -145,6 +149,42 @@ public class KinovaAPI : MonoBehaviour
 	}
   }
 
+  public static void StopArm (bool rightArm)
+  {
+	if (initSuccessful) {
+      _StopArm (rightArm);
+	}
+  }
+
+  public static void MoveArmHome (bool rightArm)
+  {
+	if (initSuccessful) {
+	  _MoveArmHome (rightArm);
+	}
+  }
+
+  public static void MoveHand (bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ)
+  {
+	if (initSuccessful) {
+	  _MoveHand (rightArm, x, y, z, thetaX, thetaY, thetaZ);
+	}
+  }
+
+  public static void MoveHandNoThetaY (bool rightArm, float x, float y, float z, float thetaX, float thetaZ)
+  {
+	if (initSuccessful) {
+	  _MoveHandNoThetaY (rightArm, x, y, z, thetaX, thetaZ);
+	}
+  }
+
+  public static void MoveFingers (bool rightArm, bool pinky, bool ring, bool middle, bool index, bool thumb)
+  {
+	if (initSuccessful) {
+	  _MoveFingers (rightArm, pinky, ring, middle, index, thumb);
+	}
+  }
+
+
   /**@brief OnApplicationQuit() is called when application closes.
    * 
    * section DESCRIPTION
@@ -158,7 +198,8 @@ public class KinovaAPI : MonoBehaviour
   private void OnApplicationQuit ()
   {
 	if (initSuccessful) {
-	  CloseDevice (false);
+	  Debug.Log("Closing Robot API...");
+	  _CloseDevice (false);
 	}
   }
 }

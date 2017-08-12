@@ -33,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 
@@ -48,7 +49,7 @@ public class HandController : MonoBehaviour
   static public string THUMB_EXTENDED = "00010000";
 
   private bool movingToPosition = false;
-  private bool rightArm = false;
+  public bool rightArm = false;
   public bool autoUnlockingEnabled = true;
   public float OffsetX = 0.0f;
   public float OffsetY = 0.0f;
@@ -59,6 +60,9 @@ public class HandController : MonoBehaviour
   public float yMax = 0.8f;
   public float zMin = -0.5f;
   public float zMax = 2.0f;
+
+  public float moveFrequency = 0.05f; // seconds
+  public float unlockFrequency = 0.5f; // seconds
 
   private bool handOpen = true;
   //If false hand is in closed fist
@@ -95,6 +99,8 @@ public class HandController : MonoBehaviour
   private GameObject pickup;
   //Used by Unity3D collider and rigid body components to allow user interaction
 
+  public MyNetworkManager myNetworkManager;
+
   /**@brief Used for initialization of this class
    * 
    * @section DESCRIPTION
@@ -107,27 +113,20 @@ public class HandController : MonoBehaviour
   void Start ()
   {
 
+  } //END START() FUNCTION
+
+  void Awake ()
+  {
+    InitController();
+  }
+
+  public void InitController ()
+  {
 	trackedHandObj = GetComponent<SteamVR_TrackedObject> ();  //Left or right controller
 
-	if (KinovaAPI.initSuccessful) {
-	  // Send commands to arm at most every 5 ms
-	  InvokeRepeating ("MoveArmToControllerPosition", 0.0f, 0.05f);
-	  InvokeRepeating ("UnlockArm", 0.5f, 0.5f);
-	}
-
-	int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
-	int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
-	Debug.Log("right controller index: " + rightIndex);
-	Debug.Log("left controller index: " + leftIndex);
-
-	rightArm = (int)trackedHandObj.index == rightIndex;
-  }
-  //END START() FUNCTION
-  void UnlockArm ()
-  {
-	if (autoUnlockingEnabled && !movingToPosition) {
-	  KinovaAPI.StopArm(rightArm);
-	}
+	// Send commands to arm at most every 5 ms
+	InvokeRepeating ("MoveArmToControllerPosition", 0.0f, moveFrequency);
+	InvokeRepeating ("UnlockArm", unlockFrequency, unlockFrequency);
   }
 
   void MoveArmToControllerPosition ()
@@ -191,39 +190,25 @@ public class HandController : MonoBehaviour
 	  }
 	}
 
-	if (controller.GetPress (touchpad)) {
+	if (controller.GetPressDown (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
 		Debug.Log ("Touchpad Up pressed");
 		MoveArm (KinovaAPI.RaiseTheRoof);
 	  } else if (controller.GetAxis (touchpad).y < -0.5f) {
 		Debug.Log ("Touchpad Down pressed");
-		KinovaAPI.StopArm(rightArm);
+		myNetworkManager.SendStopArm(rightArm, false);
 	  } else if (controller.GetAxis (touchpad).x > 0.5f) {
 		Debug.Log ("Touchpad Right pressed");
-		Debug.Log ("Fingers moved to: " +
-			KinovaAPI.MoveFingers(rightArm, true, true, true, true, true));
+		Debug.Log ("Fingers moved to: closed");
+		myNetworkManager.SendMoveFingers(rightArm, true, true, true, true, true);
 //		MoveArm (KinovaAPI.StretchOut);
 	  } else if (controller.GetAxis (touchpad).x < -0.5f) {
 		Debug.Log ("Touchpad Left pressed");
-		Debug.Log ("Fingers moved to: " +
-		    KinovaAPI.MoveFingers(rightArm, false, false, false, false, false));
+		Debug.Log ("Fingers moved to: open");
+		myNetworkManager.SendMoveFingers(rightArm, false, false, false, false, false);
 //		MoveArm (KinovaAPI.FlexBiceps);
 	  }
 	}
-  } // END MoveArmToControllerPosition()
-
-  /**@brief Update() is called once per game frame. 
-   * 
-   * section DESCRIPTION
-   * 
-   * Update(): Is the main workhorse function for frame updates.
-   * While FixedUpdate() and and LateUpdate() add extra features.
-   */
-  void Update ()
-  {
-
-	Vector3 controllerPosition = GetGlobalPosition ();
-	Vector3 controllerRotation = GetLocalRotation ();
 
 	if (controller.GetPressDown (menuButton)) {
 	  Debug.Log ("Menu pressed");
@@ -238,7 +223,7 @@ public class HandController : MonoBehaviour
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
 //	  MoveArm (Scooping);
-	  KinovaAPI.MoveArmHome(rightArm);
+	  myNetworkManager.SendMoveArmHome(rightArm);
 	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
@@ -253,9 +238,6 @@ public class HandController : MonoBehaviour
 	  Debug.Log ("Local thetaZ =  " + this.transform.localPosition.z);
 	}
 
-
-
-	//CAPTURE CONTRLLER BUTTON INTERACTION
 	if (controller == null) {
 	  if (Main.DEBUG_STATEMENTS_ON)
 		Debug.Log ("Hand controller not found. Please turn on at least one HTC VIVE controller.");
@@ -269,7 +251,7 @@ public class HandController : MonoBehaviour
 		pickup.transform.parent = this.transform;
 		pickup.GetComponent<Rigidbody> ().isKinematic = true;  
 		armsActive = true;
-	  }//END ARMSACTIVE IF STATEMENT
+	  }
 	  else {
 		if (Main.DEBUG_STATEMENTS_ON)
 		  Debug.Log ("Grip buttons " + ((int)trackedHandObj.index - 1) + " pressed, arm is locked.");
@@ -277,10 +259,16 @@ public class HandController : MonoBehaviour
 		pickup.GetComponent<Rigidbody> ().isKinematic = false;
 		armsActive = false;
 	  }
-	}//END GETPRESSDWN IF() STATEMENT
+	}
 
+  }//END MoveArmToControllerPosition() FUNCTION
+
+  void UnlockArm ()
+  {
+	if (autoUnlockingEnabled && !movingToPosition) {
+	  myNetworkManager.SendStopArm (rightArm, true);
+	}
   }
-  //END UPDATE() FUNCTION
 
   void PauseInterruptHeartbeat ()
   {
@@ -303,21 +291,18 @@ public class HandController : MonoBehaviour
   void MoveArm (float x, float y, float z, float thetaX, float thetaY, float thetaZ)
   {
 	try {
-	    Debug.Log("Kinova init: " + KinovaAPI.initSuccessful);
-	    if (KinovaAPI.initSuccessful) {
-		    PauseInterruptHeartbeat ();
-			string which = rightArm ? "right" : "left";
-			float actualX = rightArm ? x * -1 : x;
-			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", " + thetaY + ", " + thetaZ
-					+ ")");
-			KinovaAPI.MoveHand (rightArm, actualX, y, z, thetaX, thetaY, thetaZ);
-		}
+	    PauseInterruptHeartbeat ();
+		string which = rightArm ? "right" : "left";
+		float actualX = rightArm ? x * -1 : x;
+	    myNetworkManager.SendMoveArm (rightArm, actualX, y, z, thetaX, thetaY, thetaZ);
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
 	  Debug.Log (e.GetBaseException ());
 	}
   }
+
+
   /**
    * meters for x, y, z
    * radians for thetaX, thetaZ
@@ -325,13 +310,9 @@ public class HandController : MonoBehaviour
   void MoveArmNoThetaY (float x, float y, float z, float thetaX, float thetaZ)
   {
 	try {
-	    if (KinovaAPI.initSuccessful) {
-		    string which = rightArm ? "right" : "left";
-			float actualX = rightArm ? x * -1 : x;
-			Debug.Log ("Moving " + which + " arm to (" + actualX + ", " + y + ", " + z + ", " + thetaX + ", CURR_THETA_Y, " + thetaZ
-					+ ")");
-			KinovaAPI.MoveHandNoThetaY (rightArm, actualX, y, z, thetaX, thetaZ);
-		}
+	    string which = rightArm ? "right" : "left";
+		float actualX = rightArm ? x * -1 : x;
+	    myNetworkManager.SendMoveArmNoThetaY (rightArm, actualX, y, z, thetaX, thetaZ);
 	} catch (EntryPointNotFoundException e) {
 	  Debug.Log (e.Data);
 	  Debug.Log (e.GetType ());
