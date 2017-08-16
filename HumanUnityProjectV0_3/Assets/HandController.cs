@@ -172,15 +172,15 @@ public class HandController : MonoBehaviour
 	  float thetaYMax = 1.4f;
 
 	  Debug.Log ("Arm Target Y: " + yTarget);
-	  Debug.Log ("Y valid range is [" + yMin + "," + yMax + "]" );
+	  //Debug.Log ("Y valid range is [" + yMin + "," + yMax + "]" );
 	  if (yTarget > yMin && yTarget < yMax) {
 		Debug.Log ("Arm Target Y within valid range!");
 		Debug.Log ("Arm Target X: " + xTarget);
-		Debug.Log ("X valid range is [" + xMin + "," + xMax + "]" );
+		//Debug.Log ("X valid range is [" + xMin + "," + xMax + "]" );
 		if (xTarget > xMin && xTarget < xMax) {
 		  Debug.Log ("Arm Target X within valid range!");
 		  Debug.Log ("Arm Target Z: " + zTarget);
-		  Debug.Log ("Z valid range is [" + zMin + "," + zMax + "]" );
+		  //Debug.Log ("Z valid range is [" + zMin + "," + zMax + "]" );
 		  if (zTarget > zMin && zTarget < zMax) {
 			Debug.Log ("Arm Target Z within valid range!");
 			MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
