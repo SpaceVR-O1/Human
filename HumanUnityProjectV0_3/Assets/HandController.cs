@@ -52,14 +52,14 @@ public class HandController : MonoBehaviour
   public bool rightArm = false;
   public bool autoUnlockingEnabled = true;
   public float OffsetX = 0.0f;
-  public float OffsetY = 0.0f;
+  public float OffsetY = -1.0f;
   public float OffsetZ = 0.0f;
   public float xMin = -0.1f;
   public float xMax = 1.5f;
   public float yMin = -1.0f;
   public float yMax = 0.8f;
-  public float zMin = -0.5f;
-  public float zMax = 2.0f;
+  public float zMin = -1.0f;
+  public float zMax =  1.0f;
 
   public float moveFrequency = 0.05f; // seconds
   public float unlockFrequency = 0.5f; // seconds
