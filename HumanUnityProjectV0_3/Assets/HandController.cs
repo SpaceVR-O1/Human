@@ -244,11 +244,11 @@ public class HandController : MonoBehaviour
 //	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
 //	}
 
-	if (controller.GetPressDown (gripButton)) {
-	  Debug.Log ("Grip button pressed");
-//	  MoveArm (Scooping);
-	  myNetworkManager.SendMoveArmHome(rightArm);
-	}
+//	if (controller.GetPressDown (gripButton)) {
+//	  Debug.Log ("Grip button pressed");
+////	  MoveArm (Scooping);
+//	  myNetworkManager.SendMoveArmHome(rightArm);
+//	}
 
 	if (Main.DEBUG_STATEMENTS_ON && LOCAL_DEBUG_STATEMENTS_ON) {
 	  Debug.Log ("Controller #" + (int)trackedHandObj.index + " POSITION is:");
