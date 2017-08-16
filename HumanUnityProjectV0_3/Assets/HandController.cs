@@ -64,6 +64,13 @@ public class HandController : MonoBehaviour
   public float moveFrequency = 0.05f; // seconds
   public float unlockFrequency = 0.5f; // seconds
 
+  private float xTarget;
+  private float yTarget;
+  private float zTarget;
+  private bool withinValidRange;
+
+  public GameObject redSphere;
+
   private bool handOpen = true;
   //If false hand is in closed fist
   private bool armsActive = false;
@@ -129,66 +136,83 @@ public class HandController : MonoBehaviour
 	InvokeRepeating ("UnlockArm", unlockFrequency, unlockFrequency);
   }
 
+  private void CaptureTargetPosition ()
+  {
+	Vector3 controllerPosition = GetGlobalPosition ();
+	Vector3 controllerRotation = GetLocalRotation ();
+
+	xTarget = (controllerPosition.z + OffsetZ) * -1;
+	yTarget = (controllerPosition.y + OffsetY) * -1;
+	zTarget = (controllerPosition.x + OffsetX);
+  }
+
+  private void UpdateWithinValidRange ()
+  {
+	withinValidRange =
+		(yTarget > yMin && yTarget < yMax) &&
+		(xTarget > xMin && xTarget < xMax) &&
+	    (zTarget > zMin && zTarget < zMax);
+  }
+
+  void Update ()
+  {
+    CaptureTargetPosition();
+	UpdateWithinValidRange();
+
+	redSphere.SetActive(!withinValidRange);
+  }
+
   void MoveArmToControllerPosition ()
   {
 	Vector3 controllerPosition = GetGlobalPosition ();
 	Vector3 controllerRotation = GetLocalRotation ();
 
 	if (controller.GetPress (triggerButton)) {
-	  float pi = (float)Math.PI;
-	  float xTarget = (controllerPosition.z + OffsetZ) * -1 + 1;
-	  float yTarget = (controllerPosition.y + OffsetY) * -1;
-	  float zTarget = (controllerPosition.x + OffsetX);
+	  if (withinValidRange) {
 
-	  if (rightArm) {
-		zTarget *= -1;
-	  }
+		float pi = (float)Math.PI;
 
-	  float eulerY = transform.rotation.eulerAngles.y;
-	  float radY = eulerY * pi / 180f;
-	  float kinovaRadY = radY < pi ? radY * -1f : radY - pi;
-	  float eulerX = transform.rotation.eulerAngles.x;
-	  if (kinovaRadY < 0 && eulerX > 90) { // turning left/up
-		eulerX = 275 - (eulerX - 275);
-	  }
-	  if (eulerX < 90) { // turning right/down
-		eulerX -= 180;
-	  } 
-	  if (kinovaRadY < 0 && eulerX < 0) { // turning left/down
-		eulerX = -90 - (eulerX + 90);
-	  }
-	  float radX = eulerX * pi / 180f;
-	  float kinovaRadX = radX < pi ? radX * -1f : radX - pi;
-	  if (eulerX < 0) { // turning right/down
-		kinovaRadX = radX;
-	  }
-	  if (rightArm) { // mirror X rotation
-		kinovaRadX -= 1.5f; // shift rotation to match hand instead of wrist
-		kinovaRadX = (kinovaRadX * -1) + 3;
-	  } else {
-		kinovaRadX += 1.5f; // shift rotation to match hand instead of wrist
-	  }
-	  float thetaYMin = -0.8f;
-	  float thetaYMax = 1.4f;
-
-	  Debug.Log ("Arm Target Y: " + yTarget);
-	  //Debug.Log ("Y valid range is [" + yMin + "," + yMax + "]" );
-	  if (yTarget > yMin && yTarget < yMax) {
-		Debug.Log ("Arm Target Y within valid range!");
-		Debug.Log ("Arm Target X: " + xTarget);
-		//Debug.Log ("X valid range is [" + xMin + "," + xMax + "]" );
-		if (xTarget > xMin && xTarget < xMax) {
-		  Debug.Log ("Arm Target X within valid range!");
-		  Debug.Log ("Arm Target Z: " + zTarget);
-		  //Debug.Log ("Z valid range is [" + zMin + "," + zMax + "]" );
-		  if (zTarget > zMin && zTarget < zMax) {
-			Debug.Log ("Arm Target Z within valid range!");
-			MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
-			     kinovaRadX, 1.4f, 0f));
-		  }
+		if (rightArm) {
+		  zTarget *= -1;
 		}
+
+		float eulerY = transform.rotation.eulerAngles.y;
+		float radY = eulerY * pi / 180f;
+		float kinovaRadY = radY < pi ? radY * -1f : radY - pi;
+		float eulerX = transform.rotation.eulerAngles.x;
+		if (kinovaRadY < 0 && eulerX > 90) { // turning left/up
+		  eulerX = 275 - (eulerX - 275);
+		}
+		if (eulerX < 90) { // turning right/down
+		  eulerX -= 180;
+		} 
+		if (kinovaRadY < 0 && eulerX < 0) { // turning left/down
+		  eulerX = -90 - (eulerX + 90);
+		}
+		float radX = eulerX * pi / 180f;
+		float kinovaRadX = radX < pi ? radX * -1f : radX - pi;
+		if (eulerX < 0) { // turning right/down
+		  kinovaRadX = radX;
+		}
+		if (rightArm) { // mirror X rotation
+		  kinovaRadX -= 1.5f; // shift rotation to match hand instead of wrist
+		  kinovaRadX = (kinovaRadX * -1) + 3;
+		} else {
+		  kinovaRadX += 1.5f; // shift rotation to match hand instead of wrist
+		}
+
+		MoveArmNoThetaY (new KinovaAPI.Position (xTarget, yTarget, zTarget,
+		  kinovaRadX, 1.4f, 0f));
+	  } else {
+	    Debug.Log ("Trigger pressed outside of valid range");
 	  }
 	}
+  }//END MoveArmToControllerPosition() FUNCTION
+
+  void FixedUpdate ()
+  {
+	Vector3 controllerPosition = GetGlobalPosition ();
+	Vector3 controllerRotation = GetLocalRotation ();
 
 	if (controller.GetPressDown (touchpad)) {
 	  if (controller.GetAxis (touchpad).y > 0.5f) {
@@ -215,10 +239,10 @@ public class HandController : MonoBehaviour
 	  MoveArm (KinovaAPI.HomePosition);
 	}
 
-	if (controller.GetPressDown (triggerButton)) {
-	  Debug.Log ("Trigger pressed");
+//	if (controller.GetPressDown (triggerButton)) {
+//	  Debug.Log ("Trigger pressed");
 //	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
-	}
+//	}
 
 	if (controller.GetPressDown (gripButton)) {
 	  Debug.Log ("Grip button pressed");
@@ -261,7 +285,7 @@ public class HandController : MonoBehaviour
 	  }
 	}
 
-  }//END MoveArmToControllerPosition() FUNCTION
+  }//END FixedUpdate() FUNCTION
 
   void UnlockArm ()
   {
