@@ -56,7 +56,7 @@ public class MyNetworkManager : MonoBehaviour
 {
 
   public string address = "127.0.0.1";
-  public int port = 4444;  
+  public int port = 11111;  
   public GameObject cameraRig;
 
   private bool isAtStartup = true;
