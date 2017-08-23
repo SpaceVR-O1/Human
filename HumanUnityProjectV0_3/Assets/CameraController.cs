@@ -45,7 +45,7 @@ public class CameraController : MonoBehaviour
     Renderer rend = this.GetComponentInChildren<Renderer> (); 
 
     WebCamTexture myCam = new WebCamTexture ();          
-    string camName = devices [1].name;                                //Use list of cameras generated above to select camera you would like to render in Unity3D
+    string camName = devices [0].name;                                //Use list of cameras generated above to select camera you would like to render in Unity3D
     Debug.Log ("The webcam texture rendering is from: " + camName);
     myCam.deviceName = camName;
     rend.material.mainTexture = myCam;				     //Render texture onto game object

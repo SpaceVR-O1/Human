@@ -55,8 +55,8 @@ public class MoveFingersMessage : MessageBase
 public class MyNetworkManager : MonoBehaviour
 {
 
-  public string address = "127.0.0.1";
-  public int port = 4444;  
+  public string address = "96.72.179.174";
+  public int port = 27015;  
   public GameObject cameraRig;
 
   private bool isAtStartup = true;
