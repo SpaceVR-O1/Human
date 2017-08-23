@@ -239,11 +239,6 @@ public class HandController : MonoBehaviour
 	  MoveArm (KinovaAPI.HomePosition);
 	}
 
-//	if (controller.GetPressDown (triggerButton)) {
-//	  Debug.Log ("Trigger pressed");
-//	  MoveArm (ArmTargetX, ArmTargetY, ArmTargetZ, ArmTargetThetaX, ArmTargetThetaY, ArmTargetThetaZ);
-//	}
-
 //	if (controller.GetPressDown (gripButton)) {
 //	  Debug.Log ("Grip button pressed");
 ////	  MoveArm (Scooping);
