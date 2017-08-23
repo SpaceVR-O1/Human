@@ -521,6 +521,20 @@ Prefab:
       propertyPath: m_Name
       value: VideoChat
       objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: remoteView
+      value: 
+      objectReference: {fileID: 1825309146}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: cameraMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a433a625925f2ed43b83d17e572b56d7, type: 2}
+    - target: {fileID: 1733775090531198, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
   m_IsPrefabParent: 0
@@ -749,7 +763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1825309147
 MeshRenderer:
   m_ObjectHideFlags: 0
