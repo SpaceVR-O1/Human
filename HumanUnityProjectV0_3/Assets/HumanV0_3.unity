@@ -262,8 +262,6 @@ MonoBehaviour:
   yMax: 0.8
   zMin: -0.5
   zMax: 2
-  moveFrequency: 0.05
-  unlockFrequency: 0.5
   myNetworkManager: {fileID: 1540994994}
 --- !u!1 &662100222
 GameObject:
@@ -331,8 +329,6 @@ MonoBehaviour:
   yMax: 0.8
   zMin: -0.5
   zMax: 2
-  moveFrequency: 0.05
-  unlockFrequency: 0.5
   myNetworkManager: {fileID: 1540994994}
 --- !u!1001 &823733602
 Prefab:
@@ -596,7 +592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   address: 127.0.0.1
-  port: 11111
+  port: 4444
   cameraRig: {fileID: 1812014154}
 --- !u!4 &1540994995
 Transform:

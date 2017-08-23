@@ -51,16 +51,14 @@ public class HandController : MonoBehaviour
   private bool movingToPosition = false;
   public bool rightArm = false;
   public bool autoUnlockingEnabled = true;
-
-  //Full Range Demo Mode and Offset
   public float OffsetX = 0.0f;
   public float OffsetY = 0.0f;
   public float OffsetZ = 0.0f;
-  public float xMin = -2.0f;
-  public float xMax = 2.0f;
+  public float xMin = -0.1f;
+  public float xMax = 1.5f;
   public float yMin = -1.0f;
-  public float yMax = 1.0f;
-  public float zMin = -2.0f;
+  public float yMax = 0.8f;
+  public float zMin = -0.5f;
   public float zMax = 2.0f;
 
   public float moveFrequency = 0.05f; // seconds
