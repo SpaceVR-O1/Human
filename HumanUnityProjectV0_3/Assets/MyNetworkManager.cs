@@ -136,8 +136,13 @@ public class MyNetworkManager : MonoBehaviour
   public void OnConnected (NetworkMessage netMsg)
   {
 	Debug.Log ("Connected to server on " + address + ":" + port);
-	videoChat.JoinVideoChat ();
+	Invoke ("JoinVideoChat", 3.0f);
 	connectedToServer = true;
+  }
+
+  private void JoinVideoChat ()
+  {
+	videoChat.JoinVideoChat ();
   }
 
   public void SendMoveArm (bool rightArm, float x, float y, float z, float thetaX, float thetaY, float thetaZ)
