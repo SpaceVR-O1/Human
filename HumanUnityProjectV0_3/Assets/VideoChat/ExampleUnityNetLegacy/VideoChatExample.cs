@@ -304,17 +304,24 @@ public class VideoChatExample : MonoBehaviour {
 		  MasterServer.RegisterHost ("MidnightVideoChat", "Test");
 		}
 
-		List<WebCamDevice> cameras = VideoChat.webCamDevices;
-		int cameraIndex = 0;
-		for (int i = 0; i < cameras.Count; i++ ) {
-		  if (cameras[i].name.Equals ("RICOH THETA S")) {
-			cameraIndex = i;
-			Debug.Log ("Found Ricoh Theta S!");
-			break;
-		  }
-		}
-		VideoChat.deviceIndex = cameraIndex;
+        Invoke("ConnectToRicohThetaS", 1.0f);
 	  }
+
+    void ConnectToRicohThetaS ()
+    {
+        List<WebCamDevice> cameras = VideoChat.webCamDevices;
+        int cameraIndex = 0;
+        for (int i = 0; i < cameras.Count; i++)
+        {
+            if (cameras[i].name.Equals("RICOH THETA S"))
+            {
+                cameraIndex = i;
+                Debug.Log("Found Ricoh Theta S!");
+                break;
+            }
+        }
+        VideoChat.deviceIndex = cameraIndex;
+    }
 
 
 	 public void JoinVideoChat ()
