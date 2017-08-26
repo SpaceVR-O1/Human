@@ -62,6 +62,7 @@ public class MyNetworkManager : MonoBehaviour
 
   private bool isAtStartup = true;
   private bool connectedToServer = false;
+  private bool localRun = false;
     
   NetworkClient myClient;
 
@@ -77,6 +78,7 @@ public class MyNetworkManager : MonoBehaviour
 	  }
             
 	  if (Input.GetKeyDown (KeyCode.B)) {
+	    localRun = true;
 		SetupServer ();
 		SetupLocalClient ();
 	  }
@@ -101,8 +103,10 @@ public class MyNetworkManager : MonoBehaviour
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_MOVE_ARM_NO_THETAY, ReceiveMoveArmNoThetaY);
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_MOVE_ARM_HOME, ReceiveMoveArmHome);
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_STOP_ARM, ReceiveStopArm);
-	videoChat.gameObject.SetActive (true);
-	videoChat.StartVideoChat ();
+	if (!localRun) {
+	  videoChat.gameObject.SetActive (true);
+	  videoChat.StartVideoChat ();
+	}
 	isAtStartup = false;
 	Debug.Log ("Server running listening on port " + port);
   }
@@ -121,6 +125,7 @@ public class MyNetworkManager : MonoBehaviour
   {
 	myClient = ClientScene.ConnectLocalServer ();
 	InitClient ();
+	videoChat.remoteView.GetComponent<CameraController>().StartLocalStream();
 	Debug.Log ("Started local client");
   }
 
@@ -128,7 +133,9 @@ public class MyNetworkManager : MonoBehaviour
   {
 	myClient.RegisterHandler (MsgType.Connect, OnConnected);
 	cameraRig.SetActive (true); // transitively enables VIVE controllers
-	videoChat.gameObject.SetActive (true);
+	if (!localRun) {
+	  videoChat.gameObject.SetActive (true);
+	}
 	isAtStartup = false;
   }
 
@@ -136,7 +143,9 @@ public class MyNetworkManager : MonoBehaviour
   public void OnConnected (NetworkMessage netMsg)
   {
 	Debug.Log ("Connected to server on " + address + ":" + port);
-	Invoke ("JoinVideoChat", 3.0f);
+	if (!localRun) {
+	  Invoke ("JoinVideoChat", 3.0f);
+	}
 	connectedToServer = true;
   }
 

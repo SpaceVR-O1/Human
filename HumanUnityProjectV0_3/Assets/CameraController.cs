@@ -51,7 +51,7 @@ public class CameraController : MonoBehaviour
   {
   }
 
-  void StartLocalStream ()
+  public void StartLocalStream ()
   {
 	WebCamDevice[] devices = WebCamTexture.devices;
 	Debug.Log ("Number of web cams connected is: " + devices.Length);
