@@ -24,6 +24,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 
+	private string cameraDeviceName = "RICOH THETA S";
+
  /**@brief Used for initialization of this class
   * 
   * @section DESCRIPTION
@@ -33,19 +35,24 @@ public class CameraController : MonoBehaviour
   * scene, the Start function will be called on all scripts before
   * Update, etc are called for any of them. 
   */
-  void Start (){
+  void Start ()
+  {
    
-    WebCamDevice[] devices = WebCamTexture.devices;
-    Debug.Log ("Number of web cams connected is: " + devices.Length);
+	WebCamDevice[] devices = WebCamTexture.devices;
+	Debug.Log ("Number of web cams connected is: " + devices.Length);
 
-    for (int i = 0; i < devices.Length; i++) {
-      Debug.Log (i + " " + devices [i].name);
+	int cameraIndex = -1;
+	for (int i = 0; i < devices.Length; i++) {
+	  Debug.Log (i + " " + devices [i].name);
+	  if (devices [i].name.Equals (cameraDeviceName)) {
+		cameraIndex = i;
+	  }
     }
 
     Renderer rend = this.GetComponentInChildren<Renderer> (); 
 
     WebCamTexture myCam = new WebCamTexture ();          
-    string camName = devices [1].name;                                //Use list of cameras generated above to select camera you would like to render in Unity3D
+    string camName = devices [cameraIndex].name;                                //Use list of cameras generated above to select camera you would like to render in Unity3D
     Debug.Log ("The webcam texture rendering is from: " + camName);
     myCam.deviceName = camName;
     rend.material.mainTexture = myCam;				     //Render texture onto game object
