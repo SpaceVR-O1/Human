@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 public class VideoChatExample : MonoBehaviour {
 	
@@ -302,6 +303,17 @@ public class VideoChatExample : MonoBehaviour {
 							
 		  MasterServer.RegisterHost ("MidnightVideoChat", "Test");
 		}
+
+		List<WebCamDevice> cameras = VideoChat.webCamDevices;
+		int cameraIndex = 0;
+		for (int i = 0; i < cameras.Count; i++ ) {
+		  if (cameras[i].name.Equals ("RICOH THETA S")) {
+			cameraIndex = i;
+			Debug.Log ("Found Ricoh Theta S!");
+			break;
+		  }
+		}
+		VideoChat.deviceIndex = cameraIndex;
 	  }
 
 
