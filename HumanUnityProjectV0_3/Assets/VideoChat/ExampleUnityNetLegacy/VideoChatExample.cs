@@ -63,8 +63,8 @@ public class VideoChatExample : MonoBehaviour {
 		
 		//Add was created in case we need to defer the assignment of a remoteView until after it has been Network instantiated
 		//In this example we are not doing network instantiation but if we were, this would come in handy
-		VideoChat.Add( remoteView, null, null );
 		VideoChat.cameraView = cameraMaterial;
+		VideoChat.Add( remoteView, null, null );
 		
 		if( LAN )
 			LANParty.Init( "MidnightVideoChat", 1 );
