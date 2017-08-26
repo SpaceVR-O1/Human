@@ -160,34 +160,11 @@ public class VideoChatExample : MonoBehaviour {
 		
 			if( !testMode ) {
 				if( GUI.Button( new Rect( 0, 140, Screen.width, 40 ), "Start" ) ) {
-					if( LAN ) {
-						LANParty.peerType = "server";
-
-						if( oneToManyBroadcast )
-							LANParty.possibleConnections = numberReceivers;
-						else
-							LANParty.possibleConnections = 1;
-
-						LANParty.log += "\n" + Network.InitializeServer( LANParty.possibleConnections, 2301, false );
-					} else {
-						if( oneToManyBroadcast )
-							Network.InitializeServer( numberReceivers, 2301, true );
-						else
-							Network.InitializeServer( 1, 2301, true );
-						
-						MasterServer.RegisterHost( "MidnightVideoChat", "Test" );
-					}
+					StartVideoChat ();
 				}	
 				
 				if( GUI.Button( new Rect( 0, 180, Screen.width, 40 ), "Join" ) ) {
-					if( LAN ) {
-						LANParty.peerType = "client";
-						LANParty.Broadcast( LANParty.ipRequestString + LANParty.gameName );
-					} else {
-						if( hostData.Length == 0 )
-							hostData = MasterServer.PollHostList();
-					}
-					StartCoroutine( "DelayedConnection" );
+					JoinVideoChat ();
 				}
 			}
 		} else {
@@ -304,7 +281,43 @@ public class VideoChatExample : MonoBehaviour {
 		VideoChat.PostVideo();
 		#endregion
 	}
-	
+
+	public void StartVideoChat ()
+	  {
+	    Debug.Log ("Starting video chat server...");
+		if (LAN) {
+		  LANParty.peerType = "server";
+
+		  if (oneToManyBroadcast)
+			LANParty.possibleConnections = numberReceivers;
+		  else
+			LANParty.possibleConnections = 1;
+
+		  LANParty.log += "\n" + Network.InitializeServer (LANParty.possibleConnections, 2301, false);
+		} else {
+		  if (oneToManyBroadcast)
+			Network.InitializeServer (numberReceivers, 2301, true);
+		  else
+			Network.InitializeServer (1, 2301, true);
+							
+		  MasterServer.RegisterHost ("MidnightVideoChat", "Test");
+		}
+	  }
+
+
+	 public void JoinVideoChat ()
+	  {
+		Debug.Log ("Joining video chat server...");
+		if (LAN) {
+		  LANParty.peerType = "client";
+		  LANParty.Broadcast (LANParty.ipRequestString + LANParty.gameName);
+		} else {
+		  if (hostData.Length == 0)
+			hostData = MasterServer.PollHostList ();
+		}
+		StartCoroutine ("DelayedConnection");
+	 }
+
 	[RPC]
 	void ReceiveVideo( int x, int y, byte[] videoData, string timestamp ) {
 		if( videoData.Length == 1 && Network.connections.Length > 0 ) {

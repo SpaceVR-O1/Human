@@ -58,6 +58,7 @@ public class MyNetworkManager : MonoBehaviour
   public string address = "127.0.0.1";
   public int port = 11111;  
   public GameObject cameraRig;
+  public VideoChatExample videoChat;
 
   private bool isAtStartup = true;
   private bool connectedToServer = false;
@@ -100,6 +101,8 @@ public class MyNetworkManager : MonoBehaviour
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_MOVE_ARM_NO_THETAY, ReceiveMoveArmNoThetaY);
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_MOVE_ARM_HOME, ReceiveMoveArmHome);
 	NetworkServer.RegisterHandler (MyMsgTypes.MSG_STOP_ARM, ReceiveStopArm);
+	videoChat.gameObject.SetActive (true);
+	videoChat.StartVideoChat ();
 	isAtStartup = false;
 	Debug.Log ("Server running listening on port " + port);
   }
@@ -125,6 +128,7 @@ public class MyNetworkManager : MonoBehaviour
   {
 	myClient.RegisterHandler (MsgType.Connect, OnConnected);
 	cameraRig.SetActive (true); // transitively enables VIVE controllers
+	videoChat.gameObject.SetActive (true);
 	isAtStartup = false;
   }
 
@@ -132,6 +136,7 @@ public class MyNetworkManager : MonoBehaviour
   public void OnConnected (NetworkMessage netMsg)
   {
 	Debug.Log ("Connected to server on " + address + ":" + port);
+	videoChat.JoinVideoChat ();
 	connectedToServer = true;
   }
 
