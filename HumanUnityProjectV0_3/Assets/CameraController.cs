@@ -37,7 +37,22 @@ public class CameraController : MonoBehaviour
   */
   void Start ()
   {
-   
+//	StartLocalStream ();
+  }
+	
+ /**@brief Update() is called once per game frame. 
+  * 
+  * section DESCRIPTION
+  * 
+  * Update(): Is the main workhorse function for frame updates.
+  * While FixedUpdate() and and LateUpdate() add extra features.
+  */
+  void Update ()
+  {
+  }
+
+  void StartLocalStream ()
+  {
 	WebCamDevice[] devices = WebCamTexture.devices;
 	Debug.Log ("Number of web cams connected is: " + devices.Length);
 
@@ -57,17 +72,5 @@ public class CameraController : MonoBehaviour
     myCam.deviceName = camName;
     rend.material.mainTexture = myCam;				     //Render texture onto game object
     myCam.Play (); 						     //Start camera live stream
-  }
-	
- /**@brief Update() is called once per game frame. 
-  * 
-  * section DESCRIPTION
-  * 
-  * Update(): Is the main workhorse function for frame updates.
-  * While FixedUpdate() and and LateUpdate() add extra features.
-  */
-  void Update ()
-  {
-		
   }
 }
