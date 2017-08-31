@@ -473,6 +473,90 @@ Prefab:
     - {fileID: 11420968, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &899514467
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152050238114914, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: LAN
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1733775090531198, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_Name
+      value: VideoChat
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: remoteView
+      value: 
+      objectReference: {fileID: 1825309146}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: cameraMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a433a625925f2ed43b83d17e572b56d7, type: 2}
+    - target: {fileID: 1733775090531198, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039998247129866, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 81181745194346126, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: framerate
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: compression
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
+  m_IsPrefabParent: 0
 --- !u!21 &1023482066
 Material:
   serializedVersion: 6
@@ -595,9 +679,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4f6c43c1b61e8b4781c4548caceaa35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  address: 127.0.0.1
+  address: 10.1.10.174
   port: 11111
   cameraRig: {fileID: 1812014154}
+  videoChat: {fileID: 1598793703}
 --- !u!4 &1540994995
 Transform:
   m_ObjectHideFlags: 0
@@ -676,6 +761,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1598793703 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+    type: 2}
+  m_PrefabInternal: {fileID: 899514467}
+  m_Script: {fileID: 11500000, guid: 201c27575f0084c07834dcd03adcd8f0, type: 3}
 --- !u!1 &1812014154 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2, type: 2}

@@ -1,0 +1,221 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf820
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww20300\viewh18200\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Version 1.0116\
+- Removed Debug Statements\
+- Updated from .observed to .ObservedComponents for Photon examples\
+- Performance improvements
+\b0 \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\b \cf0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\b \cf0 Version 1.0115\
+- Updated dlls for Unity 5.5
+\b0 \
+\
+
+\b ---------------------------------------------------------------------------------------------------------------------------------------
+\b0 \
+\
+
+\b Version 1.0114\
+- Independent control of video stream framerate, dramatically improves performance of standard rendering.\
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+Version 1.0113\
+- Added missing references to dummy class for ExampleRenderTexture.cs\
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+Version 1.0112\
+- Added support for live streaming of RenderTexture and Texture2D (it's not just Video Chat anymore!)\
+- Added One to Many Broadcasting option to Example scripts\
+- Greatly improved audio latency and associated issues\
+- Added support for remote view to be displayed on CanvasRenderer through VideoChat.Add()\
+- Video and Audio packets are timestamped for recording/playback potential\
+- New examples (Try starting (master client) with the ExampleCar.unity and joining (standard client) with ReceiveOnlyVideoChatPhoton.unity)\
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+Version 1.0111\
+- Removed delay associated with camera initialization/switching\
+- Fixed front facing camera glitch reported on Android\
+- Expanded front facing camera field of view\
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+Version 1.0109\
+- Added Unity 4 Support Again\
+\
+---------------------------------------------------------------------------------------------------------------------------------------
+\b0 \
+\
+
+\b Version 1.0108\
+\
+- Add variable fields to dummy class in ExamplePhotonNet so they don\'92t have to be manually assigned when Photon code is uncommented\
+- Updated FX example for new simplified Video Chat\
+- Re-added Unity Net Legacy + LAN example\
+- Re-added LANParty library\
+- Simplified all example scripts by removing extra calls to VideoChat.deviceIndex++ (use this to change cameras) which was over used and slowed transitions down\
+- MORE UPDATES ARE ON THE WAY!\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+\
+Version 1.0107\
+\
+- IMMENSELY SIMPLIFIED\
+- Now focused on Photon exclusively for networking (advanced developers can still use any networking library they want)\
+- Predefined VideoQuality, AudioQuality, Compression, and EchoCancellation settings greatly simplify the developer UX for video chat\
+- Now Photon example includes the ability to control a friend\'92s mic\
+- Improved Audio and Video Processing\
+- Removed VideoChatExampleUnityNet and VideoChatExampleTNet\
+- Created VideoChatExampleTestMode for familiarization without the need to import Photon initially\
+\
+
+\b0 \
+---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+
+\b0 \
+
+\b Version 1.0106\
+\
+- Updated for Unity 4.6 and 5.3\
+- Deprecated VideoChatExampleUnityNet and VideoChatExampleTNet since both of those networking libraries are being phased out (the examples are still there to learn from).\
+- Assigned Video Object Manually to VideoChatExamplePhoton\
+- Fixed internals to avoid shader/material from being forcefully overwritten
+\b0 \
+\
+---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Version 1.0105\
+\
+- Updated for Unity 4.6 and 5.1.2
+\b0 \
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+
+\b Version 1.0100\
+\
+- Updated for Unity 4.6\
+- Added pngCompression flag for choice between PNG or JPG compression\
+- New recommended Photon Settings (use TCP for larger packet sizes, chunk size of 64 and audio frequency of 8000)\
+- Video view now maintains FOV at all resolutions via real time scaling\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Version 1.0091\
+- Commented out code that requires additional packages\
+- Added necessary Standard Assets to get going without importing them
+\b0 \
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+\
+
+\b Version 1.009\
+- Added ability to switch resolutions at runtime back again after Unity fixed iOS 7 bug\
+- Added FX folder to demonstrate real time video manipulation
+\b0 \
+\
+---------------------------------------------------------------------------------------------------------------------------------------\
+\
+\
+
+\b Video Chat 1.008\
+- Added a field to control audio packet size\
+- PDF Documentation!\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------\
+
+\b \
+Video Chat 1.007\
+- Added TNet Support\
+- Reorganized project into Core, Examples, LocalView, and Material. IT'S GROWING UP!\
+- Added 3D flag audioOut3D to signal that audio clip should be 3D\
+- Fixed a massive memory leak\
+- Still working on resolution and cropping issues...\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Video Chat 1.006\
+- Added Photon Support with VideoChatExamplePhoton.cs. See new scene and prefab\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Video Chat 1.005\
+- Improved Acoustic echo cancellation\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------\
+\
+
+\b Video Chat 1.004\
+- Warning, there are BREAKING CHANGES between this version of Video Chat and previous versions!\
+- Added LocalViewThumbnail to VideoChat example scene (See your side of the conversation)\
+- Introduced functionality to VideoChat to allow for the setup of a localViewTexture for the thumbnail\
+- Updated AudioPacket to allow for increased efficiency\
+- Updated video processing algorithm for increased efficiency\
+- Added acoustic echo cancellation, NO MORE HEADPHONES!\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Version 1.003\
+\
+- Added UnlitRotatableTexture shader to help with asymmetrical web camera rotations\
+- Expanded VideoChatExample to include more controls such as chunk rate, packet rate, and pixel delta threshold\
+- Use videoView and audioView to control RPC's in VideoChatExample\
+- VideoChat.voiceGroup is now VideoChat.audioGroup\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Video Chat 1.003\
+- Added UnlitRotatableTexture shader to help with asymmetrical web camera rotations\
+- Expanded VideoChatExample to include more controls such as chunk rate, packet rate, and pixel delta threshold\
+- Use videoView and audioView to control RPC's in VideoChatExample\
+- VideoChat.voiceGroup is now VideoChat.audioGroup\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------
+\b \
+\
+Video Chat 1.002\
+- Asymmetrical web camera rotations (before some cameras would send a feed on its side)\
+\
+- HUGE performance increase with adjustable properties for GPU bottlenecks, network bottlenecks, and image quality\
+\
+- Use smaller render sizes than the web camera might be capable of. For example iPhone only supports 192 x 144 but now 64 x 64 renders are possible, which has improved performance even further. Without this optimization iPhone 5 performance was finally acceptable but for example iPad 3 performance was still disappointing. Now most mobile platforms should be able to make decent use of Video Chat. The one caveat is that reducing below the smallest camera view also reduces the web camera's field of view, in essence it is zoomed-in.\
+\
+- A Fixed Timestep of 0.02 is actually preferable for audio now.\
+\
+Coming soon, further algorithmic optimizations (better frame delta detection) and video chat for more than 2 participants!\
+\
+
+\b0 ---------------------------------------------------------------------------------------------------------------------------------------}
