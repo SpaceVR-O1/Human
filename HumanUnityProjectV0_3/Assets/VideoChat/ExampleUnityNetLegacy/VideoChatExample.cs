@@ -221,6 +221,7 @@ public class VideoChatExample : MonoBehaviour {
 		//This is new in version 1.004, initializes things early for thumbnail
 		VideoChat.PreVideo();
 
+		// TODO: Experiment with throttling rendering
 		if( ( !testMode && Network.peerType == NetworkPeerType.Disconnected ) || ( Network.peerType != NetworkPeerType.Disconnected && Network.connections.Length < 1 ) ) {
 			VideoChat.PostVideo();
 			return;

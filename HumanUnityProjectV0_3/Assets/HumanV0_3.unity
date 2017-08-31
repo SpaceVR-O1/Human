@@ -544,6 +544,16 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: framerate
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219453225151452, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c,
+        type: 2}
+      propertyPath: compression
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8c47d1ad12d8ce94890b99f56bf0ab6c, type: 2}
   m_IsPrefabParent: 0
