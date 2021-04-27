@@ -6,18 +6,13 @@ Human will be the world's first humanoid virtual reality controlled robot in spa
 
 Press: https://techcrunch.com/2017/09/08/spacevr-thinks-vr-enabled-robots-are-the-future-for-colonizing-space/
 
-This Git repo holds code that will run on a users VR desktop compter. It's broken down into the following three directories (HumanUnityProject, HumanUnrealEngineProject, and FutureWork), and we will continue to update the code base as the mission unfolds.
+This Git repo holds code that will run on a users VR desktop compter. We will continue to update the code base as the mission unfolds.
 
 ***HumanUnityProject: A Unity3D project which takes two HTC VIVE controllers as input and outputs both a live streaming (less then 400 ms) 360 degree camera feed (using Unity 5.6 video player) and Kinova robotic arm inverse kinematics motor control commands.
 
 To run the HumanUnityProject code complete the following steps:
 1. Open "HumanV0_3.unity" scene file w/ Unity3D version 5.6, located at "GitHub\Human\HumanUnityProject\Assets" <br>
-2. Press the "play" button at the top center of the Unity editor. If it doesn't compile email blaze@spacevr.co <br>
-3. Have fun controlling a VR robo t<br>
-
-***HumanUnrealEngineProject: A Unreal Engine project which takes two HTC VIVE controllers as input and outputs both a live streaming (less then 400 ms) 360 degree camera feed (using TBD) and Kinova robotic arm inverse kinematics motor control commands.
-
-To run the HumanUnrealEngineProject code complete the following steps:
-1. TBD <br>
+2. Press the "play" button at the top center of the Unity editor. If it doesn't compile email blaze.d.a.sanders@gmail.com <br>
+3. Have fun controlling a VR robot <br>
 
 ***FutureWork: Long term features we hope to implement.
