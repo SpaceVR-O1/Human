@@ -1,8 +1,10 @@
 A VR controlled robot.
 
-@author Blaze Sanders - Email: blaze@spacevr.co Skype: blaze.sanders Twitter: @BlazeDSanders
+Author: Blaze Sanders - Twitter: @BlazeDSanders
 
 Human will be the world's first humanoid virtual reality controlled robot in space. Human uses a live streaming 360 degree camera to give everyone the opportunity to experience the truly infinite, boundless universe that we live in...through virtual reality.
+
+Press: https://techcrunch.com/2017/09/08/spacevr-thinks-vr-enabled-robots-are-the-future-for-colonizing-space/
 
 This Git repo holds code that will run on a users VR desktop compter. It's broken down into the following three directories (HumanUnityProject, HumanUnrealEngineProject, and FutureWork), and we will continue to update the code base as the mission unfolds.
 
